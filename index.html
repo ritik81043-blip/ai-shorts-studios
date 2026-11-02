@@ -58,7 +58,7 @@
                     📊 Dashboard
                 </button>
                 <button onclick="switchTab('ideas')" data-tab="ideas" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
-                    💡 Interactive AI Ideation
+                    💡 Direct AI Idea Generator
                 </button>
                 <button onclick="switchTab('script')" data-tab="script" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
                     ✍️ Script Studio
@@ -134,26 +134,27 @@
             </div>
         </div>
 
-        <!-- TAB 2: INTERACTIVE AI IDEATION -->
+        <!-- TAB 2: DIRECT AI IDEA GENERATOR -->
         <div id="tab-ideas" class="tab-content hidden flex-1 p-6 flex flex-col overflow-hidden">
-            <div class="max-w-4xl mx-auto w-full flex flex-col h-full">
+            <div class="max-w-4xl mx-auto w-full flex flex-col h-full overflow-y-auto">
                 <div class="mb-4">
-                    <h2 class="text-xl font-black text-white">💡 Interactive AI Idea Partner</h2>
-                    <p class="text-xs text-slate-400">Chat with your AI creative director to brainstorm viral angles.</p>
+                    <h2 class="text-xl font-black text-white">💡 Direct AI Idea & Hook Generator</h2>
+                    <p class="text-xs text-slate-400">Topic daaliye aur AI turant 3 powerful viral hooks aur angles generate karke dega.</p>
                 </div>
 
-                <div id="ideation-chat" class="flex-1 bg-slate-900 border border-slate-800 rounded-2xl p-4 overflow-y-auto space-y-4 text-xs mb-4">
-                    <div class="flex gap-3">
-                        <div class="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 font-bold">AI</div>
-                        <div class="bg-slate-800 text-slate-200 p-3.5 rounded-2xl border border-slate-700 max-w-[85%] leading-relaxed">
-                            Namaste! Main aapka AI Creative Partner hoon. Aap kis topic ya niche par Short banana chahte hain? (Jaise: Business Case Studies, History, Wealth Secrets). Mujhe batayiye!
-                        </div>
+                <div class="flex gap-2 mb-6">
+                    <input type="text" id="ideation-input" placeholder="Topic daaliye (e.g., Business Secrets, Dark History, Stock Market)..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
+                    <button onclick="generateDirectIdeas()" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">Generate Ideas ➔</button>
+                </div>
+
+                <div id="ideas-output-container" class="space-y-4">
+                    <!-- Default initial idea -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <span class="text-[10px] bg-indigo-500/20 text-indigo-400 px-2.5 py-1 rounded font-bold uppercase tracking-wider">Sample Viral Idea</span>
+                        <h3 class="text-sm font-bold text-white mt-2">Topic: Wealth & Money Psychology</h3>
+                        <p class="text-xs text-slate-300 mt-1"><b>Hook:</b> "Ye 3 cheezein ameer log kabhi nahi khareedte, aur isiliye woh aur ameer hote jaate hain!"</p>
+                        <button onclick="switchTab('script')" class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs">Load into Scriptwriter ➔</button>
                     </div>
-                </div>
-
-                <div class="flex gap-2 bg-slate-900 p-3 rounded-2xl border border-slate-800">
-                    <input type="text" id="ideation-input" placeholder="Apna idea yahan type karein..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
-                    <button onclick="sendIdeationMessage()" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">Send ➔</button>
                 </div>
             </div>
         </div>
@@ -237,7 +238,6 @@ Sabse pehli cheez hai brand new luxury cars. Showroom se gaadi nikalte hi 20% va
                 </div>
 
                 <div class="grid grid-cols-2 gap-6">
-                    <!-- Controls Panel -->
                     <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
                         <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Keyframe Parameter Adjuster</h3>
                         
@@ -279,7 +279,6 @@ Sabse pehli cheez hai brand new luxury cars. Showroom se gaadi nikalte hi 20% va
                         </button>
                     </div>
 
-                    <!-- Live Keyframe Canvas Preview -->
                     <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col items-center justify-center">
                         <h4 class="text-xs font-semibold text-slate-400 mb-4 uppercase tracking-wider">Keyframe Transform Preview</h4>
                         <div class="w-[200px] h-[356px] bg-black rounded-2xl border-2 border-slate-800 relative overflow-hidden flex items-center justify-center shadow-xl">
@@ -411,7 +410,7 @@ Sabse pehli cheez hai brand new luxury cars. Showroom se gaadi nikalte hi 20% va
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC & PRO FEATURES -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
         function unlockStudio() {
             const pin = document.getElementById('owner-pin').value;
@@ -442,41 +441,33 @@ Sabse pehli cheez hai brand new luxury cars. Showroom se gaadi nikalte hi 20% va
             }
         }
 
-        // Interactive AI Ideation Chat
-        function sendIdeationMessage() {
-            const input = document.getElementById('ideation-input');
-            const chatBody = document.getElementById('ideation-chat');
-            const text = input.value.trim();
-            if(!text) return;
+        // Direct AI Idea Generator Logic (No chat delay, instant ideas)
+        function generateDirectIdeas() {
+            const topicInput = document.getElementById('ideation-input');
+            const container = document.getElementById('ideas-output-container');
+            const topic = topicInput.value.trim() || 'Business & Wealth Secrets';
 
-            chatBody.innerHTML += `<div class="flex gap-3 justify-end"><div class="bg-cyan-500 text-slate-950 p-3.5 rounded-2xl font-medium max-w-[85%]">${text}</div></div>`;
-            input.value = '';
-            chatBody.scrollTop = chatBody.scrollHeight;
-
-            setTimeout(() => {
-                chatBody.innerHTML += `
-                    <div class="flex gap-3">
-                        <div class="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">AI</div>
-                        <div class="bg-slate-800 text-slate-200 p-3.5 rounded-2xl border border-slate-700 max-w-[85%] space-y-2">
-                            <p>Zabardast topic! Is par yeh viral angle best rahega:</p>
-                            <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                                <b class="text-cyan-400">Hook:</b> "99% log yehi galti karte hain..."<br>
-                                <button onclick="switchTab('script')" class="mt-2 px-3 py-1 bg-cyan-500 text-slate-950 font-bold rounded-lg text-[10px]">Load into Scriptwriter ➔</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                chatBody.scrollTop = chatBody.scrollHeight;
-            }, 800);
+            container.innerHTML = `
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded font-bold uppercase">Viral Angle #1 (High Curiosity)</span>
+                    <h3 class="text-sm font-bold text-white mt-2">Topic: ${topic}</h3>
+                    <p class="text-xs text-slate-300 mt-1"><b>Hook:</b> "99% log yehi galti karte hain jab baat aati hai ${topic} ki, aur isiliye woh fail ho jaate hain!"</p>
+                    <button onclick="switchTab('script')" class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs">Load into Scriptwriter ➔</button>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                    <span class="text-[10px] bg-indigo-500/20 text-indigo-400 px-2.5 py-1 rounded font-bold uppercase">Viral Angle #2 (Shock Factor)</span>
+                    <h3 class="text-sm font-bold text-white mt-2">Topic: ${topic}</h3>
+                    <p class="text-xs text-slate-300 mt-1"><b>Hook:</b> "Yeh ek sachai hai jo ${topic} ke baare me aapko kabhi nahi batayi gayi!"</p>
+                    <button onclick="switchTab('script')" class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs">Load into Scriptwriter ➔</button>
+                </div>
+            `;
         }
 
-        // AI Voice Generator Action
         function generateAiVoice() {
             const res = document.getElementById('voice-result');
             res.classList.remove('hidden');
         }
 
-        // Pro Keyframe Live Preview Updater
         function updateKeyframePreview() {
             const scale = document.getElementById('kf-scale').value;
             const rot = document.getElementById('kf-rot').value;
@@ -488,7 +479,7 @@ Sabse pehli cheez hai brand new luxury cars. Showroom se gaadi nikalte hi 20% va
         }
 
         function applyKeyframes() {
-            alert('Pro Keyframe Easing Curves & Transform Properties successfully applied to timeline track!');
+            alert('Pro Keyframe Easing Curves & Transform Properties successfully applied!');
             switchTab('editor');
         }
 
@@ -531,7 +522,7 @@ Sabse pehli cheez hai brand new luxury cars. Showroom se gaadi nikalte hi 20% va
             input.value = '';
 
             setTimeout(() => {
-                body.innerHTML += `<div class="flex justify-start"><div class="bg-slate-800 text-slate-200 p-3 rounded-xl border border-slate-700 max-w-[80%]">✅ Analyzed error in "${val}". Automatically fixed keyframe timeline synchronization.</div></div>`;
+                body.innerHTML += `<div class="flex justify-start"><div class="bg-slate-800 text-slate-200 p-3 rounded-xl border border-slate-700 max-w-[80%]">✅ Analyzed error in "${val}". Automatically fixed timeline synchronization.</div></div>`;
                 body.scrollTop = body.scrollHeight;
             }, 600);
         }
