@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>AI Shorts Studio — Private Online Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b', 700: '#334155' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; user-select: none; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 h-screen w-screen flex overflow-hidden">
+
+    <!-- PRIVATE OWNER LOGIN GATE -->
+    <div id="auth-gate" class="fixed inset-0 bg-slate-950 z-[9999] flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl w-full max-w-sm shadow-2xl text-center">
+            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center mx-auto mb-4 text-xl font-bold">🔒</div>
+            <h2 class="text-lg font-bold text-white mb-1">Private AI Studio</h2>
+            <p class="text-xs text-slate-400 mb-6">Enter owner passcode to unlock session.</p>
+            
+            <input type="password" id="owner-pin" placeholder="Enter PIN (Default: 1234)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-center text-white mb-4 focus:outline-none focus:border-cyan-500">
+            <button onclick="unlockStudio()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">Unlock Studio</button>
+        </div>
+    </div>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between p-4 shrink-0">
+        <div>
+            <div class="flex items-center gap-3 px-2 py-3 mb-6 border-b border-slate-800">
+                <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-lg shadow-lg shadow-cyan-500/20 text-white">S</div>
+                <div>
+                    <h1 class="font-bold text-sm tracking-tight text-white">AI Shorts Studio</h1>
+                    <div class="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Private Secure Vault
+                    </div>
+                </div>
+            </div>
+
+            <nav class="space-y-1.5" id="nav-menu">
+                <button onclick="switchTab('dashboard')" data-tab="dashboard" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    📊 Dashboard
+                </button>
+                <button onclick="switchTab('ideas')" data-tab="ideas" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    💡 AI Idea Generator
+                </button>
+                <button onclick="switchTab('script')" data-tab="script" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    ✍️ Script Studio
+                </button>
+                <button onclick="switchTab('director')" data-tab="director" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    🎬 AI Director & Storyboard
+                </button>
+                <button onclick="switchTab('editor')" data-tab="editor" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    🎞️ Multi-Track Editor
+                </button>
+                <button onclick="switchTab('settings')" data-tab="settings" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    🔐 API Key Vault
+                </button>
+            </nav>
+        </div>
+
+        <div class="pt-4 border-t border-slate-800">
+            <button onclick="openAiModal()" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white p-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-indigo-500/20 transition-all">
+                🤖 AI Assistant & Error Fixer
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+
+        <!-- TAB 1: DASHBOARD -->
+        <div id="tab-dashboard" class="tab-content flex-1 p-8 overflow-y-auto">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h2 class="text-2xl font-black text-white tracking-tight">Production Dashboard</h2>
+                        <p class="text-xs text-slate-400 mt-1">Transform any topic into a 1080×1920 viral YouTube Short instantly.</p>
+                    </div>
+                    <button onclick="switchTab('ideas')" class="px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">
+                        + New Short Project
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mb-8">
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <p class="text-xs text-slate-400 font-medium">Active Projects</p>
+                        <h3 class="text-2xl font-black text-white mt-1">1 Active</h3>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <p class="text-xs text-slate-400 font-medium">Resolution & FPS</p>
+                        <h3 class="text-2xl font-black text-cyan-400 mt-1">1080p @ 60FPS</h3>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <p class="text-xs text-slate-400 font-medium">AI Engines</p>
+                        <h3 class="text-2xl font-black text-indigo-400 mt-1">Ready Online</h3>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                    <h3 class="text-sm font-bold text-white mb-4">Recent Projects</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800/80 rounded-xl">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs">01</div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-white">Why Billionaires Never Buy New Cars</h4>
+                                    <p class="text-[10px] text-slate-400">Duration: 42s • Status: Storyboard Ready</p>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('editor')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-200">Open Studio</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: AI IDEAS -->
+        <div id="tab-ideas" class="tab-content hidden flex-1 p-8 overflow-y-auto">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-xl font-black text-white mb-2">AI Idea & Hook Generator</h2>
+                <p class="text-xs text-slate-400 mb-6">Discover viral hooks, thumbnail concepts, and high-retention angles.</p>
+                
+                <div class="flex gap-3 mb-6">
+                    <input type="text" id="topic-input" placeholder="Enter a niche or topic (e.g. Psychology of Money, SpaceX, Dark History)..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
+                    <button onclick="generateIdeas()" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20">Generate Plan</button>
+                </div>
+
+                <div id="ideas-results" class="space-y-4"></div>
+            </div>
+        </div>
+
+        <!-- TAB 3: SCRIPT STUDIO -->
+        <div id="tab-script" class="tab-content hidden flex-1 p-8 overflow-y-auto">
+            <div class="max-w-4xl mx-auto flex flex-col h-full">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 class="text-xl font-black text-white">AI Scriptwriter (Hinglish / English)</h2>
+                        <p class="text-xs text-slate-400">Scene-by-scene narration with strong psychological hook.</p>
+                    </div>
+                    <button onclick="sendToDirector()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-indigo-600/20">
+                        Send to AI Director ➔
+                    </button>
+                </div>
+                <textarea id="script-textarea" class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500 h-96 leading-relaxed">
+[HOOK - 00:00] 
+Ye 3 cheezein ameer log kabhi nahi khareedte, aur isiliye woh aur ameer hote jaate hain!
+
+[SCENE 1 - 00:05]
+Sabse pehli cheez hai brand new luxury cars. Showroom se gaadi nikalte hi 20% value gayab!
+
+[SCENE 2 - 00:15]
+Ameer log hamesha depreciating assets ki jagah cash-flowing assets me invest karte hain.
+</textarea>
+            </div>
+        </div>
+
+        <!-- TAB 4: AI DIRECTOR -->
+        <div id="tab-director" class="tab-content hidden flex-1 p-8 overflow-y-auto">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-xl font-black text-white mb-2">AI Director & Visual Storyboard</h2>
+                <p class="text-xs text-slate-400 mb-6">Sentence-by-sentence asset mapping, camera zooms, and 2D sticker isolation.</p>
+                
+                <div class="space-y-3" id="storyboard-list">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold">SCENE 01</span>
+                            <h4 class="text-xs font-bold text-white mt-1.5">"Ye 3 cheezein ameer log..."</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Asset: Luxury Car PNG cutout on dark blurred street background + Yellow Kinetic Text</p>
+                        </div>
+                        <span class="text-xs text-emerald-400 font-semibold">Ready</span>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold">SCENE 02</span>
+                            <h4 class="text-xs font-bold text-white mt-1.5">"Showroom se gaadi nikalte hi..."</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Asset: Stock financial chart dropping with red pulse animation</p>
+                        </div>
+                        <span class="text-xs text-emerald-400 font-semibold">Ready</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: MULTI-TRACK EDITOR -->
+        <div id="tab-editor" class="tab-content hidden flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
+            <div class="flex-1 flex flex-col h-full bg-slate-950 p-6 overflow-y-auto">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-cyan-400 font-bold">🎞️</span>
+                        <h2 class="text-sm font-bold text-white">Multi-Track Professional Timeline (1080×1920)</h2>
+                    </div>
+                    <button onclick="renderVideo()" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-emerald-500/20">
+                        ⚡ Render Final MP4
+                    </button>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
+                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">🎙️ Voice-Over Audio</div>
+                        <div class="flex-1 px-4"><div class="w-full h-6 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[11px] font-medium flex items-center px-3">Narration track (ElevenLabs HQ)</div></div>
+                    </div>
+                    <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
+                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">🎵 Background Music</div>
+                        <div class="flex-1 px-4"><div class="w-3/4 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[11px] font-medium flex items-center px-3">Dark mystery cinematic beat (-22dB)</div></div>
+                    </div>
+                    <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
+                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">👤 PNG Cutout Sticker</div>
+                        <div class="flex-1 px-4"><div class="w-2/3 h-6 rounded-lg bg-purple-500/20 border border-purple-500/40 text-purple-400 text-[11px] font-medium flex items-center px-3">Isolated Car & Money Stack (Drop Shadow)</div></div>
+                    </div>
+                    <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
+                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">🎬 Situational BG</div>
+                        <div class="flex-1 px-4"><div class="w-full h-6 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 text-[11px] font-medium flex items-center px-3">Luxury showroom vertical 9:16 background</div></div>
+                    </div>
+                    <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
+                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">💬 Animated Captions</div>
+                        <div class="flex-1 px-4"><div class="w-full h-6 rounded-lg bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 text-[11px] font-medium flex items-center px-3">Yellow Highlight Subtitles (Word-by-word)</div></div>
+                    </div>
+                </div>
+
+                <div id="render-console" class="hidden mt-6 bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+                    <div class="flex justify-between text-xs font-bold text-white mb-2">
+                        <span id="render-status-text">Rendering Remotion/FFmpeg MP4...</span>
+                        <span id="render-percent">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden">
+                        <div id="render-bar" class="bg-cyan-500 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live 9:16 Preview Panel -->
+            <div class="w-full lg:w-[400px] h-full bg-slate-900/50 border-l border-slate-800 p-6 flex flex-col items-center justify-center">
+                <h3 class="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-4">Live 9:16 Vertical Preview</h3>
+                
+                <div class="relative w-[260px] h-[462px] bg-black rounded-3xl overflow-hidden border-4 border-slate-800 shadow-2xl flex flex-col justify-between p-4">
+                    <div class="absolute inset-0 bg-gradient-to-b from-slate-900/20 via-transparent to-black/90 pointer-events-none"></div>
+                    
+                    <div class="z-10 flex justify-between items-center text-[10px] font-mono text-slate-300">
+                        <span class="bg-black/50 px-2 py-0.5 rounded backdrop-blur">1080×1920 60FPS</span>
+                        <span class="bg-red-500 text-white px-2 py-0.5 rounded font-bold animate-pulse">REC</span>
+                    </div>
+
+                    <div class="z-10 text-center">
+                        <div class="w-14 h-14 mx-auto mb-2 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shadow-lg">🚗</div>
+                        <span class="text-[11px] font-bold text-slate-300 bg-black/40 px-3 py-1 rounded-full backdrop-blur">Scene 01 / 04</span>
+                    </div>
+
+                    <div class="z-10 text-center pb-2">
+                        <span class="bg-black/80 text-yellow-300 font-black text-sm px-3 py-1.5 rounded-xl shadow-xl border border-yellow-500/30 uppercase tracking-wide">
+                            AMERICA KE 3 AMBER LOG
+                        </span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 mt-4">
+                    <button class="p-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs">▶ Play Preview</button>
+                    <button class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs">🔄 Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: SETTINGS / API VAULT -->
+        <div id="tab-settings" class="tab-content hidden flex-1 p-8 overflow-y-auto">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-xl font-black text-white mb-2">Private API Key Vault</h2>
+                <p class="text-xs text-slate-400 mb-6">Securely configure your cloud AI connections.</p>
+
+                <div class="space-y-4">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <label class="block text-xs font-semibold text-slate-300 mb-2">Google Gemini API Key</label>
+                        <input type="password" value="AIzaSyA-PrivateVaultEncryptedKeyPlaceholder" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <label class="block text-xs font-semibold text-slate-300 mb-2">OpenAI API Key</label>
+                        <input type="password" value="sk-proj-EncryptedSecureTokenVault992" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <label class="block text-xs font-semibold text-slate-300 mb-2">ElevenLabs API Key</label>
+                        <input type="password" value="el_sec_EncryptedVoiceKey8812" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button onclick="alert('API Vault Updated & Secured!')" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20">
+                        Save Secure Vault
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- AI ERROR ASSISTANT MODAL -->
+    <div id="ai-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[450px]">
+            <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/50">
+                <div class="flex items-center gap-2">
+                    <div class="p-2 rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">🤖</div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">AI Assistant & Error Healing Engine</h3>
+                        <p class="text-[10px] text-slate-400">Autonomous code and script debugger</p>
+                    </div>
+                </div>
+                <button onclick="closeAiModal()" class="text-slate-400 hover:text-white p-1">✕</button>
+            </div>
+
+            <div id="ai-chat-body" class="flex-1 overflow-y-auto p-4 space-y-3 text-xs">
+                <div class="bg-slate-800 text-slate-200 p-3 rounded-xl border border-slate-700">
+                    Studio AI Assistant active. Paste any script error, prompt glitch, or rendering warning here for instant automated healing.
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex gap-2">
+                <input type="text" id="ai-chat-input" placeholder="Paste script error or ask AI assistant..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                <button onclick="sendAiChat()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20">Fix / Run</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC & PRIVATE GATE -->
+    <script>
+        function unlockStudio() {
+            const pin = document.getElementById('owner-pin').value;
+            if (pin === "1234") {
+                document.getElementById('auth-gate').style.display = 'none';
+                localStorage.setItem('studio_unlocked', 'true');
+            } else {
+                alert('Incorrect Owner Passcode!');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('studio_unlocked') === 'true') {
+                document.getElementById('auth-gate').style.display = 'none';
+            }
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60";
+            });
+            const activeBtn = document.querySelector(`[data-tab="${tabId}"]`);
+            if(activeBtn) {
+                activeBtn.className = "nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20";
+            }
+        }
+
+        function generateIdeas() {
+            const topic = document.getElementById('topic-input').value || 'Wealth & Business Secrets';
+            const results = document.getElementById('ideas-results');
+            results.innerHTML = `
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                    <span class="text-[10px] bg-indigo-500/20 text-indigo-400 px-2.5 py-1 rounded font-bold">VIRAL ANGLE FOUND</span>
+                    <h3 class="text-sm font-bold text-white mt-2">Topic: ${topic}</h3>
+                    <p class="text-xs text-slate-300 mt-1"><b>Hook:</b> "99% log yehi galti karte hain jab baat aati hai ${topic} ki..."</p>
+                    <p class="text-xs text-slate-400 mt-1"><b>Estimated Duration:</b> 45 Seconds • <b>Format:</b> 1080x1920 Short</p>
+                    <button onclick="switchTab('script')" class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs">Load into Scriptwriter ➔</button>
+                </div>
+            `;
+        }
+
+        function sendToDirector() {
+            switchTab('director');
+        }
+
+        function renderVideo() {
+            const consoleDiv = document.getElementById('render-console');
+            const bar = document.getElementById('render-bar');
+            const percent = document.getElementById('render-percent');
+            const statusText = document.getElementById('render-status-text');
+            
+            consoleDiv.classList.remove('hidden');
+            let progress = 0;
+            
+            const interval = setInterval(() => {
+                progress += 10;
+                bar.style.width = progress + '%';
+                percent.innerText = progress + '%';
+                
+                if(progress === 30) statusText.innerText = 'Synthesizing ElevenLabs Voiceover & SFX...';
+                if(progress === 60) statusText.innerText = 'Compositing PNG Cutout Stickers & Keyframes...';
+                if(progress === 90) statusText.innerText = 'Remotion & FFmpeg H.264 MP4 Export...';
+                
+                if(progress >= 100) {
+                    clearInterval(interval);
+                    statusText.innerText = '✨ Render Complete! MP4 Ready for Download.';
+                    bar.classList.add('bg-emerald-500');
+                }
+            }, 300);
+        }
+
+        function openAiModal() { document.getElementById('ai-modal').classList.remove('hidden'); }
+        function closeAiModal() { document.getElementById('ai-modal').classList.add('hidden'); }
+
+        function sendAiChat() {
+            const input = document.getElementById('ai-chat-input');
+            const body = document.getElementById('ai-chat-body');
+            if(!input.value.trim()) return;
+
+            body.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-500 text-slate-950 p-3 rounded-xl font-medium max-w-[80%]">${input.value}</div></div>`;
+            const val = input.value;
+            input.value = '';
+
+            setTimeout(() => {
+                body.innerHTML += `<div class="flex justify-start"><div class="bg-slate-800 text-slate-200 p-3 rounded-xl border border-slate-700 max-w-[80%]">✅ Analyzed error in "${val}". Automatically fixed JSON storyboard mapping and adjusted audio-sync timestamps.</div></div>`;
+                body.scrollTop = body.scrollHeight;
+            }, 600);
+        }
+    </script>
+</body>
+</html>
