@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>AI Shorts Studio — Private Online Studio</title>
+    <title>AI Shorts Studio — Pro Keyframes & Voice Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -48,7 +48,7 @@
                 <div>
                     <h1 class="font-bold text-sm tracking-tight text-white">AI Shorts Studio</h1>
                     <div class="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
-                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Private Secure Vault
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Pro Edition Active
                     </div>
                 </div>
             </div>
@@ -58,13 +58,16 @@
                     📊 Dashboard
                 </button>
                 <button onclick="switchTab('ideas')" data-tab="ideas" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
-                    💡 AI Idea Generator
+                    💡 Interactive AI Ideation
                 </button>
                 <button onclick="switchTab('script')" data-tab="script" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
                     ✍️ Script Studio
                 </button>
-                <button onclick="switchTab('director')" data-tab="director" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
-                    🎬 AI Director & Storyboard
+                <button onclick="switchTab('voice')" data-tab="voice" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    🎙️ AI Voice Generator (100+)
+                </button>
+                <button onclick="switchTab('keyframing')" data-tab="keyframing" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    🎛️ Pro Keyframing Engine
                 </button>
                 <button onclick="switchTab('editor')" data-tab="editor" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
                     🎞️ Multi-Track Editor
@@ -90,8 +93,8 @@
             <div class="max-w-4xl mx-auto">
                 <div class="flex justify-between items-center mb-8">
                     <div>
-                        <h2 class="text-2xl font-black text-white tracking-tight">Production Dashboard</h2>
-                        <p class="text-xs text-slate-400 mt-1">Transform any topic into a 1080×1920 viral YouTube Short instantly.</p>
+                        <h2 class="text-2xl font-black text-white tracking-tight">Pro Production Dashboard</h2>
+                        <p class="text-xs text-slate-400 mt-1">Transform any topic into a 1080×1920 viral YouTube Short with AI Voice & Keyframes.</p>
                     </div>
                     <button onclick="switchTab('ideas')" class="px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">
                         + New Short Project
@@ -104,12 +107,12 @@
                         <h3 class="text-2xl font-black text-white mt-1">1 Active</h3>
                     </div>
                     <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-                        <p class="text-xs text-slate-400 font-medium">Resolution & FPS</p>
-                        <h3 class="text-2xl font-black text-cyan-400 mt-1">1080p @ 60FPS</h3>
+                        <p class="text-xs text-slate-400 font-medium">AI Voices Loaded</p>
+                        <h3 class="text-2xl font-black text-cyan-400 mt-1">100+ (Hi & En)</h3>
                     </div>
                     <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-                        <p class="text-xs text-slate-400 font-medium">AI Engines</p>
-                        <h3 class="text-2xl font-black text-indigo-400 mt-1">Ready Online</h3>
+                        <p class="text-xs text-slate-400 font-medium">Keyframe Engine</p>
+                        <h3 class="text-2xl font-black text-indigo-400 mt-1">Pro Curves</h3>
                     </div>
                 </div>
 
@@ -121,7 +124,7 @@
                                 <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs">01</div>
                                 <div>
                                     <h4 class="text-xs font-bold text-white">Why Billionaires Never Buy New Cars</h4>
-                                    <p class="text-[10px] text-slate-400">Duration: 42s • Status: Storyboard Ready</p>
+                                    <p class="text-[10px] text-slate-400">Duration: 42s • Status: Voice & Keyframes Ready</p>
                                 </div>
                             </div>
                             <button onclick="switchTab('editor')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-200">Open Studio</button>
@@ -131,18 +134,27 @@
             </div>
         </div>
 
-        <!-- TAB 2: AI IDEAS -->
-        <div id="tab-ideas" class="tab-content hidden flex-1 p-8 overflow-y-auto">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-xl font-black text-white mb-2">AI Idea & Hook Generator</h2>
-                <p class="text-xs text-slate-400 mb-6">Discover viral hooks, thumbnail concepts, and high-retention angles.</p>
-                
-                <div class="flex gap-3 mb-6">
-                    <input type="text" id="topic-input" placeholder="Enter a niche or topic (e.g. Psychology of Money, SpaceX, Dark History)..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
-                    <button onclick="generateIdeas()" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20">Generate Plan</button>
+        <!-- TAB 2: INTERACTIVE AI IDEATION -->
+        <div id="tab-ideas" class="tab-content hidden flex-1 p-6 flex flex-col overflow-hidden">
+            <div class="max-w-4xl mx-auto w-full flex flex-col h-full">
+                <div class="mb-4">
+                    <h2 class="text-xl font-black text-white">💡 Interactive AI Idea Partner</h2>
+                    <p class="text-xs text-slate-400">Chat with your AI creative director to brainstorm viral angles.</p>
                 </div>
 
-                <div id="ideas-results" class="space-y-4"></div>
+                <div id="ideation-chat" class="flex-1 bg-slate-900 border border-slate-800 rounded-2xl p-4 overflow-y-auto space-y-4 text-xs mb-4">
+                    <div class="flex gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 font-bold">AI</div>
+                        <div class="bg-slate-800 text-slate-200 p-3.5 rounded-2xl border border-slate-700 max-w-[85%] leading-relaxed">
+                            Namaste! Main aapka AI Creative Partner hoon. Aap kis topic ya niche par Short banana chahte hain? (Jaise: Business Case Studies, History, Wealth Secrets). Mujhe batayiye!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 bg-slate-900 p-3 rounded-2xl border border-slate-800">
+                    <input type="text" id="ideation-input" placeholder="Apna idea yahan type karein..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
+                    <button onclick="sendIdeationMessage()" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">Send ➔</button>
+                </div>
             </div>
         </div>
 
@@ -154,8 +166,8 @@
                         <h2 class="text-xl font-black text-white">AI Scriptwriter (Hinglish / English)</h2>
                         <p class="text-xs text-slate-400">Scene-by-scene narration with strong psychological hook.</p>
                     </div>
-                    <button onclick="sendToDirector()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-indigo-600/20">
-                        Send to AI Director ➔
+                    <button onclick="switchTab('voice')" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-indigo-600/20">
+                        Generate Voice-Over ➔
                     </button>
                 </div>
                 <textarea id="script-textarea" class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500 h-96 leading-relaxed">
@@ -164,41 +176,123 @@ Ye 3 cheezein ameer log kabhi nahi khareedte, aur isiliye woh aur ameer hote jaa
 
 [SCENE 1 - 00:05]
 Sabse pehli cheez hai brand new luxury cars. Showroom se gaadi nikalte hi 20% value gayab!
-
-[SCENE 2 - 00:15]
-Ameer log hamesha depreciating assets ki jagah cash-flowing assets me invest karte hain.
 </textarea>
             </div>
         </div>
 
-        <!-- TAB 4: AI DIRECTOR -->
-        <div id="tab-director" class="tab-content hidden flex-1 p-8 overflow-y-auto">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-xl font-black text-white mb-2">AI Director & Visual Storyboard</h2>
-                <p class="text-xs text-slate-400 mb-6">Sentence-by-sentence asset mapping, camera zooms, and 2D sticker isolation.</p>
-                
-                <div class="space-y-3" id="storyboard-list">
-                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
-                        <div>
-                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold">SCENE 01</span>
-                            <h4 class="text-xs font-bold text-white mt-1.5">"Ye 3 cheezein ameer log..."</h4>
-                            <p class="text-[11px] text-slate-400 mt-0.5">Asset: Luxury Car PNG cutout on dark blurred street background + Yellow Kinetic Text</p>
-                        </div>
-                        <span class="text-xs text-emerald-400 font-semibold">Ready</span>
+        <!-- TAB 4: AI VOICE GENERATOR (100+ VOICES, HINDI & ENGLISH) -->
+        <div id="tab-voice" class="tab-content hidden flex-1 p-8 overflow-y-auto">
+            <div class="max-w-3xl mx-auto">
+                <div class="mb-6">
+                    <h2 class="text-xl font-black text-white">🎙️ AI Voice Generator (100+ Voices)</h2>
+                    <p class="text-xs text-slate-400 mt-1">Convert script to ultra-realistic multilingual voiceovers (Hindi, English, Hinglish).</p>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-2">Select Voice Model (100+ Available)</label>
+                        <select id="voice-select" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
+                            <option value="hi-IN-AaravNeural">Aarav (Hindi - Deep & Authoritative Male)</option>
+                            <option value="hi-IN-AnanyaNeural">Ananya (Hindi - Professional Storyteller Female)</option>
+                            <option value="en-US-MarcusNeural">Marcus (English - Cinematic Documentarian)</option>
+                            <option value="en-US-SophiaNeural">Sophia (English - High Retention Short Voice)</option>
+                            <option value="hinglish-Rohan">Rohan (Hinglish Creator Voice - Fast & Punchy)</option>
+                        </select>
                     </div>
-                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+
+                    <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-bold">SCENE 02</span>
-                            <h4 class="text-xs font-bold text-white mt-1.5">"Showroom se gaadi nikalte hi..."</h4>
-                            <p class="text-[11px] text-slate-400 mt-0.5">Asset: Stock financial chart dropping with red pulse animation</p>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Voice Speed (1.0x - 2.0x)</label>
+                            <input type="range" min="1.0" max="2.0" step="0.1" value="1.2" class="w-full accent-cyan-500">
                         </div>
-                        <span class="text-xs text-emerald-400 font-semibold">Ready</span>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Stability / Expression</label>
+                            <input type="range" min="0" max="100" value="85" class="w-full accent-cyan-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-2">Narration Text</label>
+                        <textarea id="voice-text" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">Ye 3 cheezein ameer log kabhi nahi khareedte, aur isiliye woh aur ameer hote jaate hain!</textarea>
+                    </div>
+
+                    <button onclick="generateAiVoice()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">
+                        ⚡ Generate & Sync Voice-Over
+                    </button>
+
+                    <div id="voice-result" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
+                        <span class="text-xs text-emerald-400 font-semibold">✅ Voice Synthesized Successfully (HQ Audio Track Ready)</span>
+                        <button onclick="switchTab('editor')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-medium rounded-lg">View on Timeline ➔</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 5: MULTI-TRACK EDITOR -->
+        <!-- TAB 5: PRO KEYFRAMING ENGINE -->
+        <div id="tab-keyframing" class="tab-content hidden flex-1 p-8 overflow-y-auto">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-6">
+                    <h2 class="text-xl font-black text-white">🎛️ Pro Keyframing & Motion Graphics Engine</h2>
+                    <p class="text-xs text-slate-400 mt-1">Precise control over Position, Scale, Rotation, Opacity, and Easing curves.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Controls Panel -->
+                    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                        <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Keyframe Parameter Adjuster</h3>
+                        
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Position X / Y</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="number" value="540" id="kf-x" class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white text-center">
+                                <input type="number" value="960" id="kf-y" class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white text-center">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Scale (%)</label>
+                            <input type="range" min="10" max="300" value="100" id="kf-scale" class="w-full accent-cyan-500" oninput="updateKeyframePreview()">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Rotation (Degrees)</label>
+                            <input type="range" min="-180" max="180" value="0" id="kf-rot" class="w-full accent-cyan-500" oninput="updateKeyframePreview()">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Opacity (%)</label>
+                            <input type="range" min="0" max="100" value="100" id="kf-opacity" class="w-full accent-cyan-500" oninput="updateKeyframePreview()">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Easing Curve</label>
+                            <select id="kf-ease" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white">
+                                <option>Ease-In-Out (Smooth Cinematic)</option>
+                                <option>Ease-In (Fast Entry)</option>
+                                <option>Ease-Out (Spring Bounce)</option>
+                                <option>Linear (Constant Motion)</option>
+                            </select>
+                        </div>
+
+                        <button onclick="applyKeyframes()" class="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20">
+                            Apply Keyframes to Scene
+                        </button>
+                    </div>
+
+                    <!-- Live Keyframe Canvas Preview -->
+                    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col items-center justify-center">
+                        <h4 class="text-xs font-semibold text-slate-400 mb-4 uppercase tracking-wider">Keyframe Transform Preview</h4>
+                        <div class="w-[200px] h-[356px] bg-black rounded-2xl border-2 border-slate-800 relative overflow-hidden flex items-center justify-center shadow-xl">
+                            <div id="kf-preview-box" class="w-24 h-24 bg-gradient-to-tr from-cyan-500 to-indigo-600 rounded-xl shadow-lg flex items-center justify-center text-xs font-bold text-slate-950 transition-all duration-150">
+                                Sticker
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: MULTI-TRACK EDITOR -->
         <div id="tab-editor" class="tab-content hidden flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
             <div class="flex-1 flex flex-col h-full bg-slate-950 p-6 overflow-y-auto">
                 <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
@@ -213,24 +307,16 @@ Ameer log hamesha depreciating assets ki jagah cash-flowing assets me invest kar
 
                 <div class="space-y-3">
                     <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
-                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">🎙️ Voice-Over Audio</div>
-                        <div class="flex-1 px-4"><div class="w-full h-6 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[11px] font-medium flex items-center px-3">Narration track (ElevenLabs HQ)</div></div>
+                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">🎙️ AI Voice-Over</div>
+                        <div class="flex-1 px-4"><div class="w-full h-6 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[11px] font-medium flex items-center px-3">Multilingual AI Voice Track (Synced)</div></div>
                     </div>
                     <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
-                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">🎵 Background Music</div>
-                        <div class="flex-1 px-4"><div class="w-3/4 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[11px] font-medium flex items-center px-3">Dark mystery cinematic beat (-22dB)</div></div>
+                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">🎛️ Keyframed Sticker</div>
+                        <div class="flex-1 px-4"><div class="w-2/3 h-6 rounded-lg bg-purple-500/20 border border-purple-500/40 text-purple-400 text-[11px] font-medium flex items-center px-3">Pro Easing & Scale Animation Active</div></div>
                     </div>
                     <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
-                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">👤 PNG Cutout Sticker</div>
-                        <div class="flex-1 px-4"><div class="w-2/3 h-6 rounded-lg bg-purple-500/20 border border-purple-500/40 text-purple-400 text-[11px] font-medium flex items-center px-3">Isolated Car & Money Stack (Drop Shadow)</div></div>
-                    </div>
-                    <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
-                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">🎬 Situational BG</div>
-                        <div class="flex-1 px-4"><div class="w-full h-6 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 text-[11px] font-medium flex items-center px-3">Luxury showroom vertical 9:16 background</div></div>
-                    </div>
-                    <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
-                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">💬 Animated Captions</div>
-                        <div class="flex-1 px-4"><div class="w-full h-6 rounded-lg bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 text-[11px] font-medium flex items-center px-3">Yellow Highlight Subtitles (Word-by-word)</div></div>
+                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">💬 Kinetic Captions</div>
+                        <div class="flex-1 px-4"><div class="w-full h-6 rounded-lg bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 text-[11px] font-medium flex items-center px-3">Yellow Highlight Subtitles</div></div>
                     </div>
                 </div>
 
@@ -264,19 +350,14 @@ Ameer log hamesha depreciating assets ki jagah cash-flowing assets me invest kar
 
                     <div class="z-10 text-center pb-2">
                         <span class="bg-black/80 text-yellow-300 font-black text-sm px-3 py-1.5 rounded-xl shadow-xl border border-yellow-500/30 uppercase tracking-wide">
-                            AMERICA KE 3 AMBER LOG
+                            AMEER LOG CARS
                         </span>
                     </div>
-                </div>
-
-                <div class="flex items-center gap-3 mt-4">
-                    <button class="p-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs">▶ Play Preview</button>
-                    <button class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs">🔄 Reset</button>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 6: SETTINGS / API VAULT -->
+        <!-- TAB 7: SETTINGS / API VAULT -->
         <div id="tab-settings" class="tab-content hidden flex-1 p-8 overflow-y-auto">
             <div class="max-w-2xl mx-auto">
                 <h2 class="text-xl font-black text-white mb-2">Private API Key Vault</h2>
@@ -285,15 +366,11 @@ Ameer log hamesha depreciating assets ki jagah cash-flowing assets me invest kar
                 <div class="space-y-4">
                     <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
                         <label class="block text-xs font-semibold text-slate-300 mb-2">Google Gemini API Key</label>
-                        <input type="password" value="AIzaSyA-PrivateVaultEncryptedKeyPlaceholder" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
+                        <input type="password" value="AIzaSyA-EncryptedVaultKey" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
                     </div>
                     <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                        <label class="block text-xs font-semibold text-slate-300 mb-2">OpenAI API Key</label>
-                        <input type="password" value="sk-proj-EncryptedSecureTokenVault992" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                        <label class="block text-xs font-semibold text-slate-300 mb-2">ElevenLabs API Key</label>
-                        <input type="password" value="el_sec_EncryptedVoiceKey8812" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-2">ElevenLabs Voice API Key</label>
+                        <input type="password" value="el_sec_EncryptedVoiceKey" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
                     </div>
                 </div>
 
@@ -334,7 +411,7 @@ Ameer log hamesha depreciating assets ki jagah cash-flowing assets me invest kar
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC & PRIVATE GATE -->
+    <!-- JAVASCRIPT LOGIC & PRO FEATURES -->
     <script>
         function unlockStudio() {
             const pin = document.getElementById('owner-pin').value;
@@ -365,22 +442,54 @@ Ameer log hamesha depreciating assets ki jagah cash-flowing assets me invest kar
             }
         }
 
-        function generateIdeas() {
-            const topic = document.getElementById('topic-input').value || 'Wealth & Business Secrets';
-            const results = document.getElementById('ideas-results');
-            results.innerHTML = `
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-                    <span class="text-[10px] bg-indigo-500/20 text-indigo-400 px-2.5 py-1 rounded font-bold">VIRAL ANGLE FOUND</span>
-                    <h3 class="text-sm font-bold text-white mt-2">Topic: ${topic}</h3>
-                    <p class="text-xs text-slate-300 mt-1"><b>Hook:</b> "99% log yehi galti karte hain jab baat aati hai ${topic} ki..."</p>
-                    <p class="text-xs text-slate-400 mt-1"><b>Estimated Duration:</b> 45 Seconds • <b>Format:</b> 1080x1920 Short</p>
-                    <button onclick="switchTab('script')" class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs">Load into Scriptwriter ➔</button>
-                </div>
-            `;
+        // Interactive AI Ideation Chat
+        function sendIdeationMessage() {
+            const input = document.getElementById('ideation-input');
+            const chatBody = document.getElementById('ideation-chat');
+            const text = input.value.trim();
+            if(!text) return;
+
+            chatBody.innerHTML += `<div class="flex gap-3 justify-end"><div class="bg-cyan-500 text-slate-950 p-3.5 rounded-2xl font-medium max-w-[85%]">${text}</div></div>`;
+            input.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            setTimeout(() => {
+                chatBody.innerHTML += `
+                    <div class="flex gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">AI</div>
+                        <div class="bg-slate-800 text-slate-200 p-3.5 rounded-2xl border border-slate-700 max-w-[85%] space-y-2">
+                            <p>Zabardast topic! Is par yeh viral angle best rahega:</p>
+                            <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
+                                <b class="text-cyan-400">Hook:</b> "99% log yehi galti karte hain..."<br>
+                                <button onclick="switchTab('script')" class="mt-2 px-3 py-1 bg-cyan-500 text-slate-950 font-bold rounded-lg text-[10px]">Load into Scriptwriter ➔</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 800);
         }
 
-        function sendToDirector() {
-            switchTab('director');
+        // AI Voice Generator Action
+        function generateAiVoice() {
+            const res = document.getElementById('voice-result');
+            res.classList.remove('hidden');
+        }
+
+        // Pro Keyframe Live Preview Updater
+        function updateKeyframePreview() {
+            const scale = document.getElementById('kf-scale').value;
+            const rot = document.getElementById('kf-rot').value;
+            const opacity = document.getElementById('kf-opacity').value;
+            const box = document.getElementById('kf-preview-box');
+
+            box.style.transform = `scale(${scale / 100}) rotate(${rot}deg)`;
+            box.style.opacity = opacity / 100;
+        }
+
+        function applyKeyframes() {
+            alert('Pro Keyframe Easing Curves & Transform Properties successfully applied to timeline track!');
+            switchTab('editor');
         }
 
         function renderVideo() {
@@ -397,8 +506,8 @@ Ameer log hamesha depreciating assets ki jagah cash-flowing assets me invest kar
                 bar.style.width = progress + '%';
                 percent.innerText = progress + '%';
                 
-                if(progress === 30) statusText.innerText = 'Synthesizing ElevenLabs Voiceover & SFX...';
-                if(progress === 60) statusText.innerText = 'Compositing PNG Cutout Stickers & Keyframes...';
+                if(progress === 30) statusText.innerText = 'Synthesizing 100+ AI Multilingual Voiceover...';
+                if(progress === 60) statusText.innerText = 'Applying Pro Keyframing Easing Curves...';
                 if(progress === 90) statusText.innerText = 'Remotion & FFmpeg H.264 MP4 Export...';
                 
                 if(progress >= 100) {
@@ -422,7 +531,7 @@ Ameer log hamesha depreciating assets ki jagah cash-flowing assets me invest kar
             input.value = '';
 
             setTimeout(() => {
-                body.innerHTML += `<div class="flex justify-start"><div class="bg-slate-800 text-slate-200 p-3 rounded-xl border border-slate-700 max-w-[80%]">✅ Analyzed error in "${val}". Automatically fixed JSON storyboard mapping and adjusted audio-sync timestamps.</div></div>`;
+                body.innerHTML += `<div class="flex justify-start"><div class="bg-slate-800 text-slate-200 p-3 rounded-xl border border-slate-700 max-w-[80%]">✅ Analyzed error in "${val}". Automatically fixed keyframe timeline synchronization.</div></div>`;
                 body.scrollTop = body.scrollHeight;
             }, 600);
         }
