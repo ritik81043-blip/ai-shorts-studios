@@ -1,531 +1,465 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>AI Shorts Studio — Pro Keyframes & Voice Generator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b', 700: '#334155' }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; user-select: none; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Motion Studio</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+:root{color-scheme:dark}
+html,body{background:#020617;color:#e2e8f0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:13px}
+.inp{background:#020617;border:1px solid #1e293b;border-radius:.5rem;padding:.35rem .5rem;width:100%;color:#fff;font-size:12px}
+.inp:focus{outline:none;border-color:#06b6d4}
+textarea.inp{resize:vertical}
+.btn{background:#06b6d4;color:#020617;font-weight:700;border-radius:.5rem;padding:.4rem .75rem;font-size:12px}
+.btn:hover{background:#22d3ee}.btn:disabled{opacity:.5;cursor:not-allowed}
+.b2{background:#1e293b;color:#e2e8f0;font-weight:600;border-radius:.5rem;padding:.4rem .7rem;font-size:12px}
+.b2:hover{background:#334155}
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:.8rem;padding:.7rem}
+label{display:block;font-size:10px;color:#94a3b8;margin-bottom:2px}
+.tl-row{position:absolute;left:0;right:0;height:26px;border-bottom:1px solid #1e293b}
+.bar{position:absolute;top:3px;height:20px;border-radius:5px;background:rgba(6,182,212,.3);border:1px solid #06b6d4;font-size:10px;padding:0 4px;overflow:hidden;white-space:nowrap;cursor:grab;line-height:18px}
+.bar.sel{background:rgba(168,85,247,.4);border-color:#a855f7}
+.rh{position:absolute;right:0;top:0;bottom:0;width:7px;cursor:ew-resize;background:rgba(255,255,255,.35)}
+.msg{white-space:pre-wrap;border-radius:.6rem;padding:.45rem .6rem;font-size:12px;line-height:1.45;word-break:break-word}
+.msg.user{background:#1e293b;margin-left:15%}
+.msg.assistant{background:#0b1d33;border:1px solid #164e63;margin-right:8%}
+.msg.error{background:#3f1d1d;color:#fecaca}
+.msg.sys{color:#94a3b8;font-size:11px}
+</style>
 </head>
-<body class="bg-slate-950 text-slate-100 h-screen w-screen flex overflow-hidden">
+<body>
+<div class="p-3 max-w-[1400px] mx-auto">
+ <header class="flex flex-wrap items-center gap-2 mb-3">
+  <div class="h-8 w-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold">M</div>
+  <h1 class="font-bold text-sm mr-auto">Motion Studio <span class="text-slate-400 font-normal text-[11px]">long-form 2D video builder + Claude AI</span></h1>
+  <select id="ratio" class="inp !w-auto"><option value="l">16:9 Landscape</option><option value="p">9:16 Shorts</option></select>
+  <select id="bg" class="inp !w-auto"></select>
+  <button class="b2" onclick="newP()">＋ New blank project</button>
+  <button class="b2" onclick="manualSave()">Save</button>
+  <button class="btn" id="rbtn" onclick="renderV()">⏺ Render video</button>
+ </header>
 
-    <!-- PRIVATE OWNER LOGIN GATE -->
-    <div id="auth-gate" class="fixed inset-0 bg-slate-950 z-[9999] flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl w-full max-w-sm shadow-2xl text-center">
-            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center mx-auto mb-4 text-xl font-bold">🔒</div>
-            <h2 class="text-lg font-bold text-white mb-1">Private AI Studio</h2>
-            <p class="text-xs text-slate-400 mb-6">Enter owner passcode to unlock session.</p>
-            
-            <input type="password" id="owner-pin" placeholder="Enter PIN (Default: 1234)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-center text-white mb-4 focus:outline-none focus:border-cyan-500">
-            <button onclick="unlockStudio()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">Unlock Studio</button>
-        </div>
+ <section class="card mb-3" style="border-color:#0e7490">
+  <h2 class="font-bold text-sm mb-2">🚀 Auto-Studio <span class="text-slate-400 font-normal text-[11px]">paste a full script or a topic. Builds up to 600 scenes in batches.</span></h2>
+  <textarea id="auto-in" rows="4" class="inp" placeholder="Paste your full script here (long scripts work), or type a topic like “Why billionaires never buy new cars”"></textarea>
+  <div class="flex flex-wrap items-end gap-x-4 gap-y-2 mt-2">
+   <div><label>Scenes (1–600)</label><input id="alen" type="number" min="1" max="600" value="8" class="inp !w-24"></div>
+   <div><label>Scenes per batch</label><input id="batch" type="number" min="3" max="30" value="20" class="inp !w-24"></div>
+   <div><label>AI art images (total)</label><input id="artmax" type="number" min="0" max="400" value="6" class="inp !w-24"></div>
+   <label class="!mb-0 flex items-center gap-1"><input type="checkbox" id="o-art" checked>AI art</label>
+   <label class="!mb-0 flex items-center gap-1"><input type="checkbox" id="o-voice" checked>Narration</label>
+   <label class="!mb-0 flex items-center gap-1"><input type="checkbox" id="o-sfx" checked>Sound FX</label>
+   <label class="!mb-0 flex items-center gap-1"><input type="checkbox" id="o-tr" checked>Transitions</label>
+   <label class="!mb-0 flex items-center gap-1"><input type="checkbox" id="o-tts">AI voice after scenes</label>
+   <button class="btn ml-auto" id="auto-btn" onclick="autoStudio()">🚀 Generate everything</button>
+  </div>
+  <div class="h-2 bg-slate-800 rounded mt-2 overflow-hidden"><div id="prog" class="h-full bg-cyan-500" style="width:0%"></div></div>
+  <p id="auto-st" class="text-[11px] text-slate-300 mt-1">Creates scenes, badges, cards, stickers, AI art, keyframes, sound effects and narration. Long scripts are split evenly across the scene count.</p>
+ </section>
+
+ <div class="grid lg:grid-cols-[1fr_340px] gap-3">
+  <div class="space-y-3 min-w-0">
+   <div class="card flex flex-col items-center">
+    <canvas id="cv" class="rounded-lg bg-black max-w-full touch-none" style="max-height:44vh"></canvas>
+    <div class="flex items-center gap-2 w-full mt-2">
+     <button class="btn" id="pp" onclick="tog()">▶</button>
+     <input id="seek" type="range" min="0" max="1000" value="0" class="flex-1 accent-cyan-500">
+     <span id="tc" class="text-[11px] text-slate-400 w-28 text-right">0:00 / 0:00</span>
+     <label class="!mb-0 flex items-center gap-1"><input type="checkbox" id="vo" checked>Preview browser voice</label>
     </div>
+   </div>
 
-    <!-- SIDEBAR NAVIGATION -->
-    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between p-4 shrink-0">
-        <div>
-            <div class="flex items-center gap-3 px-2 py-3 mb-6 border-b border-slate-800">
-                <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-lg shadow-lg shadow-cyan-500/20 text-white">S</div>
-                <div>
-                    <h1 class="font-bold text-sm tracking-tight text-white">AI Shorts Studio</h1>
-                    <div class="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
-                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Pro Edition Active
-                    </div>
-                </div>
-            </div>
+   <div class="card" id="props"></div>
 
-            <nav class="space-y-1.5" id="nav-menu">
-                <button onclick="switchTab('dashboard')" data-tab="dashboard" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                    📊 Dashboard
-                </button>
-                <button onclick="switchTab('ideas')" data-tab="ideas" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
-                    💡 Direct AI Idea Generator
-                </button>
-                <button onclick="switchTab('script')" data-tab="script" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
-                    ✍️ Script Studio
-                </button>
-                <button onclick="switchTab('voice')" data-tab="voice" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
-                    🎙️ AI Voice Generator (100+)
-                </button>
-                <button onclick="switchTab('keyframing')" data-tab="keyframing" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
-                    🎛️ Pro Keyframing Engine
-                </button>
-                <button onclick="switchTab('editor')" data-tab="editor" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
-                    🎞️ Multi-Track Editor
-                </button>
-                <button onclick="switchTab('settings')" data-tab="settings" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60">
-                    🔐 API Key Vault
-                </button>
-            </nav>
-        </div>
-
-        <div class="pt-4 border-t border-slate-800">
-            <button onclick="openAiModal()" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white p-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-indigo-500/20 transition-all">
-                🤖 AI Assistant & Error Fixer
-            </button>
-        </div>
-    </aside>
-
-    <!-- MAIN WORKSPACE -->
-    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
-
-        <!-- TAB 1: DASHBOARD -->
-        <div id="tab-dashboard" class="tab-content flex-1 p-8 overflow-y-auto">
-            <div class="max-w-4xl mx-auto">
-                <div class="flex justify-between items-center mb-8">
-                    <div>
-                        <h2 class="text-2xl font-black text-white tracking-tight">Pro Production Dashboard</h2>
-                        <p class="text-xs text-slate-400 mt-1">Transform any topic into a 1080×1920 viral YouTube Short with AI Voice & Keyframes.</p>
-                    </div>
-                    <button onclick="switchTab('ideas')" class="px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">
-                        + New Short Project
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-3 gap-4 mb-8">
-                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-                        <p class="text-xs text-slate-400 font-medium">Active Projects</p>
-                        <h3 class="text-2xl font-black text-white mt-1">1 Active</h3>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-                        <p class="text-xs text-slate-400 font-medium">AI Voices Loaded</p>
-                        <h3 class="text-2xl font-black text-cyan-400 mt-1">100+ (Hi & En)</h3>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-                        <p class="text-xs text-slate-400 font-medium">Keyframe Engine</p>
-                        <h3 class="text-2xl font-black text-indigo-400 mt-1">Pro Curves</h3>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                    <h3 class="text-sm font-bold text-white mb-4">Recent Projects</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800/80 rounded-xl">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs">01</div>
-                                <div>
-                                    <h4 class="text-xs font-bold text-white">Why Billionaires Never Buy New Cars</h4>
-                                    <p class="text-[10px] text-slate-400">Duration: 42s • Status: Voice & Keyframes Ready</p>
-                                </div>
-                            </div>
-                            <button onclick="switchTab('editor')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-200">Open Studio</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 2: DIRECT AI IDEA GENERATOR -->
-        <div id="tab-ideas" class="tab-content hidden flex-1 p-6 flex flex-col overflow-hidden">
-            <div class="max-w-4xl mx-auto w-full flex flex-col h-full overflow-y-auto">
-                <div class="mb-4">
-                    <h2 class="text-xl font-black text-white">💡 Direct AI Idea & Hook Generator</h2>
-                    <p class="text-xs text-slate-400">Topic daaliye aur AI turant 3 powerful viral hooks aur angles generate karke dega.</p>
-                </div>
-
-                <div class="flex gap-2 mb-6">
-                    <input type="text" id="ideation-input" placeholder="Topic daaliye (e.g., Business Secrets, Dark History, Stock Market)..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
-                    <button onclick="generateDirectIdeas()" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">Generate Ideas ➔</button>
-                </div>
-
-                <div id="ideas-output-container" class="space-y-4">
-                    <!-- Default initial idea -->
-                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-                        <span class="text-[10px] bg-indigo-500/20 text-indigo-400 px-2.5 py-1 rounded font-bold uppercase tracking-wider">Sample Viral Idea</span>
-                        <h3 class="text-sm font-bold text-white mt-2">Topic: Wealth & Money Psychology</h3>
-                        <p class="text-xs text-slate-300 mt-1"><b>Hook:</b> "Ye 3 cheezein ameer log kabhi nahi khareedte, aur isiliye woh aur ameer hote jaate hain!"</p>
-                        <button onclick="switchTab('script')" class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs">Load into Scriptwriter ➔</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 3: SCRIPT STUDIO -->
-        <div id="tab-script" class="tab-content hidden flex-1 p-8 overflow-y-auto">
-            <div class="max-w-4xl mx-auto flex flex-col h-full">
-                <div class="flex justify-between items-center mb-4">
-                    <div>
-                        <h2 class="text-xl font-black text-white">AI Scriptwriter (Hinglish / English)</h2>
-                        <p class="text-xs text-slate-400">Scene-by-scene narration with strong psychological hook.</p>
-                    </div>
-                    <button onclick="switchTab('voice')" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-indigo-600/20">
-                        Generate Voice-Over ➔
-                    </button>
-                </div>
-                <textarea id="script-textarea" class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500 h-96 leading-relaxed">
-[HOOK - 00:00] 
-Ye 3 cheezein ameer log kabhi nahi khareedte, aur isiliye woh aur ameer hote jaate hain!
-
-[SCENE 1 - 00:05]
-Sabse pehli cheez hai brand new luxury cars. Showroom se gaadi nikalte hi 20% value gayab!
-</textarea>
-            </div>
-        </div>
-
-        <!-- TAB 4: AI VOICE GENERATOR (100+ VOICES, HINDI & ENGLISH) -->
-        <div id="tab-voice" class="tab-content hidden flex-1 p-8 overflow-y-auto">
-            <div class="max-w-3xl mx-auto">
-                <div class="mb-6">
-                    <h2 class="text-xl font-black text-white">🎙️ AI Voice Generator (100+ Voices)</h2>
-                    <p class="text-xs text-slate-400 mt-1">Convert script to ultra-realistic multilingual voiceovers (Hindi, English, Hinglish).</p>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-2">Select Voice Model (100+ Available)</label>
-                        <select id="voice-select" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
-                            <option value="hi-IN-AaravNeural">Aarav (Hindi - Deep & Authoritative Male)</option>
-                            <option value="hi-IN-AnanyaNeural">Ananya (Hindi - Professional Storyteller Female)</option>
-                            <option value="en-US-MarcusNeural">Marcus (English - Cinematic Documentarian)</option>
-                            <option value="en-US-SophiaNeural">Sophia (English - High Retention Short Voice)</option>
-                            <option value="hinglish-Rohan">Rohan (Hinglish Creator Voice - Fast & Punchy)</option>
-                        </select>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-2">Voice Speed (1.0x - 2.0x)</label>
-                            <input type="range" min="1.0" max="2.0" step="0.1" value="1.2" class="w-full accent-cyan-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-2">Stability / Expression</label>
-                            <input type="range" min="0" max="100" value="85" class="w-full accent-cyan-500">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-2">Narration Text</label>
-                        <textarea id="voice-text" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">Ye 3 cheezein ameer log kabhi nahi khareedte, aur isiliye woh aur ameer hote jaate hain!</textarea>
-                    </div>
-
-                    <button onclick="generateAiVoice()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20 transition-all">
-                        ⚡ Generate & Sync Voice-Over
-                    </button>
-
-                    <div id="voice-result" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
-                        <span class="text-xs text-emerald-400 font-semibold">✅ Voice Synthesized Successfully (HQ Audio Track Ready)</span>
-                        <button onclick="switchTab('editor')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-medium rounded-lg">View on Timeline ➔</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 5: PRO KEYFRAMING ENGINE -->
-        <div id="tab-keyframing" class="tab-content hidden flex-1 p-8 overflow-y-auto">
-            <div class="max-w-4xl mx-auto">
-                <div class="mb-6">
-                    <h2 class="text-xl font-black text-white">🎛️ Pro Keyframing & Motion Graphics Engine</h2>
-                    <p class="text-xs text-slate-400 mt-1">Precise control over Position, Scale, Rotation, Opacity, and Easing curves.</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
-                        <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Keyframe Parameter Adjuster</h3>
-                        
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Position X / Y</label>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="number" value="540" id="kf-x" class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white text-center">
-                                <input type="number" value="960" id="kf-y" class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white text-center">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Scale (%)</label>
-                            <input type="range" min="10" max="300" value="100" id="kf-scale" class="w-full accent-cyan-500" oninput="updateKeyframePreview()">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Rotation (Degrees)</label>
-                            <input type="range" min="-180" max="180" value="0" id="kf-rot" class="w-full accent-cyan-500" oninput="updateKeyframePreview()">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Opacity (%)</label>
-                            <input type="range" min="0" max="100" value="100" id="kf-opacity" class="w-full accent-cyan-500" oninput="updateKeyframePreview()">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Easing Curve</label>
-                            <select id="kf-ease" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white">
-                                <option>Ease-In-Out (Smooth Cinematic)</option>
-                                <option>Ease-In (Fast Entry)</option>
-                                <option>Ease-Out (Spring Bounce)</option>
-                                <option>Linear (Constant Motion)</option>
-                            </select>
-                        </div>
-
-                        <button onclick="applyKeyframes()" class="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20">
-                            Apply Keyframes to Scene
-                        </button>
-                    </div>
-
-                    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col items-center justify-center">
-                        <h4 class="text-xs font-semibold text-slate-400 mb-4 uppercase tracking-wider">Keyframe Transform Preview</h4>
-                        <div class="w-[200px] h-[356px] bg-black rounded-2xl border-2 border-slate-800 relative overflow-hidden flex items-center justify-center shadow-xl">
-                            <div id="kf-preview-box" class="w-24 h-24 bg-gradient-to-tr from-cyan-500 to-indigo-600 rounded-xl shadow-lg flex items-center justify-center text-xs font-bold text-slate-950 transition-all duration-150">
-                                Sticker
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 6: MULTI-TRACK EDITOR -->
-        <div id="tab-editor" class="tab-content hidden flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
-            <div class="flex-1 flex flex-col h-full bg-slate-950 p-6 overflow-y-auto">
-                <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-                    <div class="flex items-center gap-2">
-                        <span class="text-cyan-400 font-bold">🎞️</span>
-                        <h2 class="text-sm font-bold text-white">Multi-Track Professional Timeline (1080×1920)</h2>
-                    </div>
-                    <button onclick="renderVideo()" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-emerald-500/20">
-                        ⚡ Render Final MP4
-                    </button>
-                </div>
-
-                <div class="space-y-3">
-                    <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
-                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">🎙️ AI Voice-Over</div>
-                        <div class="flex-1 px-4"><div class="w-full h-6 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[11px] font-medium flex items-center px-3">Multilingual AI Voice Track (Synced)</div></div>
-                    </div>
-                    <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
-                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">🎛️ Keyframed Sticker</div>
-                        <div class="flex-1 px-4"><div class="w-2/3 h-6 rounded-lg bg-purple-500/20 border border-purple-500/40 text-purple-400 text-[11px] font-medium flex items-center px-3">Pro Easing & Scale Animation Active</div></div>
-                    </div>
-                    <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-2.5">
-                        <div class="w-40 text-xs font-semibold text-slate-300 border-r border-slate-800 px-2">💬 Kinetic Captions</div>
-                        <div class="flex-1 px-4"><div class="w-full h-6 rounded-lg bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 text-[11px] font-medium flex items-center px-3">Yellow Highlight Subtitles</div></div>
-                    </div>
-                </div>
-
-                <div id="render-console" class="hidden mt-6 bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                    <div class="flex justify-between text-xs font-bold text-white mb-2">
-                        <span id="render-status-text">Rendering Remotion/FFmpeg MP4...</span>
-                        <span id="render-percent">0%</span>
-                    </div>
-                    <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden">
-                        <div id="render-bar" class="bg-cyan-500 h-full w-0 transition-all duration-300"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Live 9:16 Preview Panel -->
-            <div class="w-full lg:w-[400px] h-full bg-slate-900/50 border-l border-slate-800 p-6 flex flex-col items-center justify-center">
-                <h3 class="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-4">Live 9:16 Vertical Preview</h3>
-                
-                <div class="relative w-[260px] h-[462px] bg-black rounded-3xl overflow-hidden border-4 border-slate-800 shadow-2xl flex flex-col justify-between p-4">
-                    <div class="absolute inset-0 bg-gradient-to-b from-slate-900/20 via-transparent to-black/90 pointer-events-none"></div>
-                    
-                    <div class="z-10 flex justify-between items-center text-[10px] font-mono text-slate-300">
-                        <span class="bg-black/50 px-2 py-0.5 rounded backdrop-blur">1080×1920 60FPS</span>
-                        <span class="bg-red-500 text-white px-2 py-0.5 rounded font-bold animate-pulse">REC</span>
-                    </div>
-
-                    <div class="z-10 text-center">
-                        <div class="w-14 h-14 mx-auto mb-2 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shadow-lg">🚗</div>
-                        <span class="text-[11px] font-bold text-slate-300 bg-black/40 px-3 py-1 rounded-full backdrop-blur">Scene 01 / 04</span>
-                    </div>
-
-                    <div class="z-10 text-center pb-2">
-                        <span class="bg-black/80 text-yellow-300 font-black text-sm px-3 py-1.5 rounded-xl shadow-xl border border-yellow-500/30 uppercase tracking-wide">
-                            AMEER LOG CARS
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 7: SETTINGS / API VAULT -->
-        <div id="tab-settings" class="tab-content hidden flex-1 p-8 overflow-y-auto">
-            <div class="max-w-2xl mx-auto">
-                <h2 class="text-xl font-black text-white mb-2">Private API Key Vault</h2>
-                <p class="text-xs text-slate-400 mb-6">Securely configure your cloud AI connections.</p>
-
-                <div class="space-y-4">
-                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                        <label class="block text-xs font-semibold text-slate-300 mb-2">Google Gemini API Key</label>
-                        <input type="password" value="AIzaSyA-EncryptedVaultKey" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                        <label class="block text-xs font-semibold text-slate-300 mb-2">ElevenLabs Voice API Key</label>
-                        <input type="password" value="el_sec_EncryptedVoiceKey" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-500">
-                    </div>
-                </div>
-
-                <div class="mt-6 flex justify-end">
-                    <button onclick="alert('API Vault Updated & Secured!')" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20">
-                        Save Secure Vault
-                    </button>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- AI ERROR ASSISTANT MODAL -->
-    <div id="ai-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[450px]">
-            <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/50">
-                <div class="flex items-center gap-2">
-                    <div class="p-2 rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">🤖</div>
-                    <div>
-                        <h3 class="text-sm font-bold text-white">AI Assistant & Error Healing Engine</h3>
-                        <p class="text-[10px] text-slate-400">Autonomous code and script debugger</p>
-                    </div>
-                </div>
-                <button onclick="closeAiModal()" class="text-slate-400 hover:text-white p-1">✕</button>
-            </div>
-
-            <div id="ai-chat-body" class="flex-1 overflow-y-auto p-4 space-y-3 text-xs">
-                <div class="bg-slate-800 text-slate-200 p-3 rounded-xl border border-slate-700">
-                    Studio AI Assistant active. Paste any script error, prompt glitch, or rendering warning here for instant automated healing.
-                </div>
-            </div>
-
-            <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex gap-2">
-                <input type="text" id="ai-chat-input" placeholder="Paste script error or ask AI assistant..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500">
-                <button onclick="sendAiChat()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20">Fix / Run</button>
-            </div>
-        </div>
+   <div class="card">
+    <div class="flex flex-wrap gap-1.5 mb-2 items-center">
+     <button class="b2" onclick="add('text')">＋ Text</button><button class="b2" onclick="add('emoji')">＋ Sticker</button>
+     <button class="b2" onclick="add('card')">＋ Card</button><button class="b2" onclick="add('badge')">＋ Badge</button>
+     <button class="b2" onclick="add('shape')">＋ Shape</button><button class="b2" onclick="add('flash')">＋ Flash</button>
+     <button class="b2" onclick="$('file').click()">＋ Image</button><input id="file" type="file" accept="image/*" class="hidden">
+     <input id="art" class="inp !w-44" placeholder="AI art: e.g. cartoon rocket">
+     <button class="b2" onclick="manualArt()">🎨 Draw</button>
+     <label class="!mb-0 ml-auto flex items-center gap-1">Length <input id="dur" type="number" min="3" max="3600" value="20" class="inp !w-20">s</label>
+     <span id="lcount" class="text-[11px] text-slate-400"></span>
     </div>
+    <div id="tlbox" class="relative overflow-hidden">
+     <div id="ruler" style="height:22px;margin-left:110px;position:relative;cursor:pointer"></div>
+     <div id="tlscroll" style="height:260px;overflow-y:auto;overflow-x:hidden;position:relative"><div id="tl" style="position:relative;width:100%"></div></div>
+     <div id="head" class="absolute top-0 bottom-0 w-0.5 bg-red-500 pointer-events-none"></div>
+    </div>
+    <p class="text-[10px] text-slate-400 mt-1">Drag a bar to move it, drag its white edge to change length, click the ruler to seek. Drag objects on the canvas to reposition. Only visible rows are drawn, so 3,000+ layers stay smooth.</p>
+   </div>
+  </div>
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        function unlockStudio() {
-            const pin = document.getElementById('owner-pin').value;
-            if (pin === "1234") {
-                document.getElementById('auth-gate').style.display = 'none';
-                localStorage.setItem('studio_unlocked', 'true');
-            } else {
-                alert('Incorrect Owner Passcode!');
-            }
-        }
+  <aside class="space-y-3 min-w-0">
+   <div class="card space-y-2">
+    <h2 class="font-bold text-sm">🎙️ AI voice</h2>
+    <div class="grid grid-cols-2 gap-1.5">
+     <div><label>Provider</label><select id="tts-prov" class="inp"><option value="browser">Browser (preview only)</option><option value="elevenlabs">ElevenLabs (natural)</option><option value="openai">OpenAI TTS</option></select></div>
+     <div><label>Voice ID / name</label><input id="tts-voice" class="inp" placeholder="ElevenLabs voice ID, or OpenAI: alloy"></div>
+    </div>
+    <div><label>API key (saved only in this browser)</label><input id="tts-key" type="password" class="inp" placeholder="ElevenLabs or OpenAI key"></div>
+    <button class="btn w-full" id="voice-btn" onclick="genVoice()">🎙 Generate AI voice for all lines</button>
+    <p id="voice-st" class="text-[11px] text-slate-300"></p>
+    <p class="text-[10px] text-slate-500">Each line is generated once and cached in this browser, so re-renders don't cost extra. Browser voices play in preview only and can't be captured into the video file.</p>
+   </div>
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('studio_unlocked') === 'true') {
-                document.getElementById('auth-gate').style.display = 'none';
-            }
-        });
+   <div class="card flex flex-col gap-2" style="height:620px">
+    <div class="flex items-center gap-2">
+     <h2 class="font-bold text-sm mr-auto">🤖 Claude assistant</h2>
+     <select id="lang" class="inp !w-auto"><option>Hinglish</option><option>English</option><option>Hindi (Devanagari)</option></select>
+    </div>
+    <div class="flex flex-wrap gap-1.5">
+     <button class="b2" onclick="quick('ideas')">💡 Ideas</button>
+     <button class="b2" onclick="quick('review')">🔍 Review edit</button>
+     <button class="b2" onclick="useLast()">📋 Use last reply as script</button>
+     <button class="b2" onclick="clearChat()">Clear chat</button>
+    </div>
+    <div id="chat-log" class="flex-1 overflow-y-auto space-y-2 min-h-0"></div>
+    <div class="flex gap-1.5">
+     <textarea id="chat-in" rows="2" class="inp" placeholder="Ask anything, or ask for a script…"></textarea>
+     <button class="btn" onclick="chatSend()">Send</button>
+    </div>
+   </div>
+  </aside>
+ </div>
+</div>
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const cl=(v,a,b)=>Math.min(b,Math.max(a,v));
+const LG=()=>$('lang').value;
+const BGS=[['Navy glow','#0b1030','#1e1b8a'],['Matrix green','#021a0a','#0f7a2a'],['Hot pink','#be185d','#f472b6'],['Midnight','#020617','#1e293b'],['Purple','#2e1065','#7c3aed']];
+const INS=['none','pop','slideL','slideR','slideU','zoom','spin','bounce','type','fade'],IDLE=['none','float','shake','pulse'],SFX=['none','pop','whoosh','ding','click','boom'];
+const ROW=26,LABEL=110,MAX_DUR=3600;
+const E={out:t=>1-(1-t)*(1-t),io:t=>t<.5?2*t*t:1-2*(1-t)*(1-t),back:t=>{const c=1.70158,d=c+1;return 1+d*Math.pow(t-1,3)+c*Math.pow(t-1,2)},
+bounce:t=>{const n=7.5625,d=2.75;if(t<1/d)return n*t*t;if(t<2/d)return n*(t-=1.5/d)*t+.75;if(t<2.5/d)return n*(t-=2.25/d)*t+.9375;return n*(t-=2.625/d)*t+.984375}};
+const EASEK={linear:t=>t,in:t=>t*t,out:E.out,io:E.io,back:E.back,bounce:E.bounce};
 
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60";
-            });
-            const activeBtn = document.querySelector(`[data-tab="${tabId}"]`);
-            if(activeBtn) {
-                activeBtn.className = "nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20";
-            }
-        }
+$('bg').innerHTML=BGS.map((b,i)=>'<option value="'+i+'">BG: '+b[0]+'</option>').join('');
 
-        // Direct AI Idea Generator Logic (No chat delay, instant ideas)
-        function generateDirectIdeas() {
-            const topicInput = document.getElementById('ideation-input');
-            const container = document.getElementById('ideas-output-container');
-            const topic = topicInput.value.trim() || 'Business & Wealth Secrets';
+let P={bg:0,ratio:'l',dur:20,layers:[],narr:[]};
+let S={t:0,play:false,sel:null,rec:false,busy:false,stop:false,voiceBusy:false,voiceStop:false,chatBusy:false};
+let imgs={},uid=1,W=1280,H=720,u=1,chat=[],drag=null,tdrag=null,last=0,spoken=new Set(),activeSrc=[];
+let ac=null,adest=null,rec=null,ch=[],fileW=null,wq=Promise.resolve(),saveT=0;
 
-            container.innerHTML = `
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded font-bold uppercase">Viral Angle #1 (High Curiosity)</span>
-                    <h3 class="text-sm font-bold text-white mt-2">Topic: ${topic}</h3>
-                    <p class="text-xs text-slate-300 mt-1"><b>Hook:</b> "99% log yehi galti karte hain jab baat aati hai ${topic} ki, aur isiliye woh fail ho jaate hain!"</p>
-                    <button onclick="switchTab('script')" class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs">Load into Scriptwriter ➔</button>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-                    <span class="text-[10px] bg-indigo-500/20 text-indigo-400 px-2.5 py-1 rounded font-bold uppercase">Viral Angle #2 (Shock Factor)</span>
-                    <h3 class="text-sm font-bold text-white mt-2">Topic: ${topic}</h3>
-                    <p class="text-xs text-slate-300 mt-1"><b>Hook:</b> "Yeh ek sachai hai jo ${topic} ke baare me aapko kabhi nahi batayi gayi!"</p>
-                    <button onclick="switchTab('script')" class="mt-4 px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs">Load into Scriptwriter ➔</button>
-                </div>
-            `;
-        }
+/* ---------- storage (IndexedDB) ---------- */
+const DB={
+ _p:null,
+ open(){if(!this._p)this._p=new Promise((res,rej)=>{const r=indexedDB.open('motion-studio',1);r.onupgradeneeded=()=>{r.result.createObjectStore('kv');r.result.createObjectStore('audio')};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});return this._p},
+ async run(store,mode,fn){const d=await this.open();return new Promise((res,rej)=>{const t=d.transaction(store,mode);const req=fn(t.objectStore(store));t.oncomplete=()=>res(req?req.result:undefined);t.onerror=()=>rej(t.error)})},
+ get(k,s='kv'){return this.run(s,'readonly',o=>o.get(k))},
+ set(k,v,s='kv'){return this.run(s,'readwrite',o=>o.put(v,k))}
+};
+async function saveP(){try{await DB.set('project',{bg:P.bg,ratio:P.ratio,dur:P.dur,layers:P.layers,narr:P.narr.map(n=>({t:n.t,text:n.text,key:n.key||null}))});return true}catch(e){return false}}
+function autosave(){clearTimeout(saveT);saveT=setTimeout(saveP,1500)}
+async function manualSave(){alert(await saveP()?'Saved in this browser.':'Could not save (storage unavailable).')}
+async function loadP(){try{const s=await DB.get('project');if(s){P={...P,...s,narr:(s.narr||[]).map(n=>({...n}))};P.layers.forEach(loadImg);uid=Math.max(1,...P.layers.map(l=>l.id))+1;await hydrateAudio()}else demo()}catch(e){demo()}}
+async function saveChat(){try{await DB.set('chat',chat.slice(-60))}catch(e){}}
 
-        function generateAiVoice() {
-            const res = document.getElementById('voice-result');
-            res.classList.remove('hidden');
-        }
+/* ---------- layers ---------- */
+function mk(o){const l=Object.assign({id:uid++,type:'text',text:'New text',color:'#ffffff',x:50,y:50,size:60,rot:0,start:S.t,dur:4,inA:'pop',idle:'none',kf:[],sfx:'none'},o);l.x2=o.x2??null;l.y2=o.y2??null;return l}
+const findL=id=>P.layers.find(l=>l.id===id);
+const sel=()=>findL(S.sel);
+function add(type){const d={text:{text:'YOUR TEXT',size:70},emoji:{text:'🔥',size:140},card:{text:'Editor 1',size:70,color:'#6d28d9',inA:'slideU'},badge:{text:'PROBLEM',size:44,color:'#dc2626'},shape:{text:'',size:160,color:'#22d3ee',inA:'zoom'},flash:{text:'',size:100,color:'#ffffff',dur:.5,inA:'none',sfx:'boom'}}[type];
+ const l=mk(Object.assign({type},d));P.layers.push(l);S.sel=l.id;rebuild()}
+function loadImg(l){if(!l.src||imgs[l.id])return;const i=new Image();i.onload=()=>{imgs[l.id]=i;draw()};i.src=l.src}
+$('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const l=mk({type:'image',text:'image',size:100,src:r.result});loadImg(l);P.layers.push(l);S.sel=l.id;rebuild()};r.readAsDataURL(f);e.target.value=''};
 
-        function updateKeyframePreview() {
-            const scale = document.getElementById('kf-scale').value;
-            const rot = document.getElementById('kf-rot').value;
-            const opacity = document.getElementById('kf-opacity').value;
-            const box = document.getElementById('kf-preview-box');
+/* ---------- animation ---------- */
+function anim(l,t){const lt=t-l.start,a={s:1,ox:0,oy:0,r:0,al:1,tp:1};if(lt<0||lt>l.dur)return null;
+ const p=cl(lt/.6,0,1),A=l.inA;
+ if(A==='pop')a.s=E.back(p);else if(A==='slideL')a.ox=-W*.6*(1-E.out(p));else if(A==='slideR')a.ox=W*.6*(1-E.out(p));
+ else if(A==='slideU')a.oy=H*.6*(1-E.out(p));else if(A==='zoom'){a.s=1+2*(1-E.out(p));a.al=p}
+ else if(A==='spin'){a.r=360*(1-E.out(p));a.s=E.out(p)}else if(A==='bounce')a.oy=-H*.7*(1-E.bounce(p));
+ else if(A==='fade')a.al=p;else if(A==='type')a.tp=cl(lt/Math.max(.5,l.text.length*.07),0,1);
+ a.al*=cl((l.dur-lt)/.3,0,1);
+ if(l.idle==='float')a.oy+=Math.sin(lt*3)*10*u;else if(l.idle==='shake'){a.ox+=Math.sin(lt*60)*5*u;a.oy+=Math.cos(lt*47)*5*u}else if(l.idle==='pulse')a.s*=1+Math.sin(lt*6)*.06;
+ let x=l.x,y=l.y;if(l.x2!=null&&l.y2!=null){const m=E.io(cl(lt/l.dur,0,1));x=l.x+(l.x2-l.x)*m;y=l.y+(l.y2-l.y)*m}
+ const k=(l.kf||[]).slice().sort((p,q)=>p.t-q.t);
+ if(k.length&&!(drag&&drag.l===l)){let f;if(lt<=k[0].t)f=k[0];else if(lt>=k[k.length-1].t)f=k[k.length-1];else{let i=0;while(k[i+1].t<lt)i++;const A1=k[i],B=k[i+1],m=(EASEK[B.e]||E.io)((lt-A1.t)/(B.t-A1.t)),g=q=>A1[q]+(B[q]-A1[q])*m;f={x:g('x'),y:g('y'),s:g('s'),r:g('r'),o:g('o')}}
+  x=f.x;y=f.y;a.s*=f.s/100;a.r+=f.r;a.al*=f.o/100}
+ a.x=x/100*W+a.ox;a.y=y/100*H+a.oy;return a}
 
-            box.style.transform = `scale(${scale / 100}) rotate(${rot}deg)`;
-            box.style.opacity = opacity / 100;
-        }
+/* ---------- drawing ---------- */
+const cv=$('cv'),ctx=cv.getContext('2d');
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h)}
+function draw(){const t=S.t,b=BGS[P.bg];const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,b[1]);g.addColorStop(.5,b[1]);g.addColorStop(1,b[2]);
+ ctx.globalAlpha=1;ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ for(let i=0;i<3;i++){const cx=W*(.2+.3*i)+Math.sin(t*.7+i*2)*W*.08,cy=H*(.3+.25*i)+Math.cos(t*.5+i)*H*.08,r=H*(.35+.1*i);const rg=ctx.createRadialGradient(cx,cy,0,cx,cy,r);rg.addColorStop(0,'rgba(255,255,255,.12)');rg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H)}
+ P.layers.forEach(l=>{const a=anim(l,t);l._b=null;if(!a)return;ctx.save();ctx.globalAlpha=cl(a.al,0,1);ctx.translate(a.x,a.y);ctx.rotate((l.rot+a.r)*Math.PI/180);ctx.scale(a.s,a.s);
+  const z=l.size*u;ctx.textAlign='center';ctx.textBaseline='middle';let bw=z,bh=z;
+  if(l.type==='text'||l.type==='emoji'){ctx.font=(l.type==='emoji'?'':'900 ')+z+'px system-ui,"Segoe UI Emoji",sans-serif';const tx=l.text.slice(0,Math.ceil(l.text.length*a.tp));
+   if(l.type==='text'){ctx.lineJoin='round';ctx.lineWidth=z*.2;ctx.strokeStyle='#000';ctx.strokeText(tx,0,0)}
+   ctx.fillStyle=l.color;ctx.fillText(tx,0,0);bw=ctx.measureText(l.text).width}
+  else if(l.type==='card'){bw=z*3.2;bh=z*2;const cg=ctx.createLinearGradient(0,-bh/2,0,bh/2);cg.addColorStop(0,l.color);cg.addColorStop(1,'#0f172a');ctx.shadowColor=l.color;ctx.shadowBlur=30;ctx.fillStyle=cg;rr(-bw/2,-bh/2,bw,bh,z*.25);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=3;ctx.stroke();
+   ctx.fillStyle='rgba(255,255,255,.9)';ctx.beginPath();ctx.arc(0,-z*.35,z*.4,0,7);ctx.fill();ctx.fillStyle='#fff';ctx.font='800 '+z*.45+'px system-ui,sans-serif';ctx.fillText(l.text,0,z*.6)}
+  else if(l.type==='badge'){ctx.font='800 '+z+'px system-ui,sans-serif';const tw=ctx.measureText(l.text).width;bw=tw+z*1.2;bh=z*1.6;ctx.fillStyle=l.color;rr(-bw/2,-bh/2,bw,bh,z*.3);ctx.fill();ctx.fillStyle='#fff';ctx.fillText(l.text,0,2)}
+  else if(l.type==='image'){const im=imgs[l.id];if(im){bw=z*3;bh=bw*im.height/im.width;ctx.drawImage(im,-bw/2,-bh/2,bw,bh)}}
+  else if(l.type==='shape'){bw=bh=z*2;ctx.fillStyle=l.color;ctx.shadowColor=l.color;ctx.shadowBlur=30;ctx.beginPath();ctx.arc(0,0,z,0,7);ctx.fill();ctx.shadowBlur=0}
+  else if(l.type==='flash'){ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=cl(1-(t-l.start)/l.dur,0,1)*.9;ctx.fillStyle=l.color;ctx.fillRect(0,0,W,H);bw=0;bh=0}
+  ctx.restore();l._b={x:a.x,y:a.y,w:bw*a.s,h:bh*a.s}});
+ ctx.globalAlpha=1;const l=sel();
+ if(l&&l._b&&!S.rec){ctx.strokeStyle='#a855f7';ctx.lineWidth=3;ctx.setLineDash([10,6]);ctx.strokeRect(l._b.x-l._b.w/2-6,l._b.y-l._b.h/2-6,l._b.w+12,l._b.h+12);ctx.setLineDash([])}
+ $('seek').value=Math.round(S.t/P.dur*1000);$('tc').textContent=fmt(S.t)+' / '+fmt(P.dur);
+ const hd=$('head');if(hd){const tw=$('tlbox').clientWidth-LABEL;hd.style.left=(LABEL+tw*S.t/P.dur)+'px'}}
+function size(){W=P.ratio==='l'?1280:1080;H=P.ratio==='l'?720:1920;u=P.ratio==='l'?1:1.5;cv.width=W;cv.height=H}
 
-        function applyKeyframes() {
-            alert('Pro Keyframe Easing Curves & Transform Properties successfully applied!');
-            switchTab('editor');
-        }
+/* canvas drag */
+const cvp=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]};
+cv.onpointerdown=e=>{const[px,py]=cvp(e);for(let i=P.layers.length-1;i>=0;i--){const l=P.layers[i],b=l._b;if(b&&Math.abs(px-b.x)<=b.w/2+10&&Math.abs(py-b.y)<=b.h/2+10){S.sel=l.id;drag={l,dx:l.x-px/W*100,dy:l.y-py/H*100};cv.setPointerCapture(e.pointerId);props();tl();draw();return}}
+ S.sel=null;props();tl();draw()};
+cv.onpointermove=e=>{if(!drag)return;const[px,py]=cvp(e);drag.l.x=Math.round((px/W*100+drag.dx)*10)/10;drag.l.y=Math.round((py/H*100+drag.dy)*10)/10;draw()};
+cv.onpointerup=()=>{if(drag){drag=null;autosave();props()}};
 
-        function renderVideo() {
-            const consoleDiv = document.getElementById('render-console');
-            const bar = document.getElementById('render-bar');
-            const percent = document.getElementById('render-percent');
-            const statusText = document.getElementById('render-status-text');
-            
-            consoleDiv.classList.remove('hidden');
-            let progress = 0;
-            
-            const interval = setInterval(() => {
-                progress += 10;
-                bar.style.width = progress + '%';
-                percent.innerText = progress + '%';
-                
-                if(progress === 30) statusText.innerText = 'Synthesizing 100+ AI Multilingual Voiceover...';
-                if(progress === 60) statusText.innerText = 'Applying Pro Keyframing Easing Curves...';
-                if(progress === 90) statusText.innerText = 'Remotion & FFmpeg H.264 MP4 Export...';
-                
-                if(progress >= 100) {
-                    clearInterval(interval);
-                    statusText.innerText = '✨ Render Complete! MP4 Ready for Download.';
-                    bar.classList.add('bg-emerald-500');
-                }
-            }, 300);
-        }
+/* properties panel */
+function fld(k,lab,type,o){const l=sel();const v=l[k]??'';return '<div><label>'+lab+'</label>'+(type==='sel'?'<select class="inp" data-k="'+k+'">'+o.map(x=>'<option'+(x===v?' selected':'')+'>'+x+'</option>').join('')+'</select>':'<input class="inp" data-k="'+k+'" type="'+type+'" value="'+esc(v)+'" step="any">')+'</div>'}
+function props(){const l=sel(),p=$('props');if(!l){p.innerHTML='<p class="text-slate-400 text-[11px]">Select an object on the canvas or timeline to edit it, or let Auto-Studio build the video.</p>';return}
+ p.innerHTML='<div class="grid grid-cols-2 gap-1.5">'+(l.type==='image'?'':fld('text','Text','text'))+fld('color','Color','color')+fld('size','Size','number')+fld('rot','Rotate°','number')+fld('x','X %','number')+fld('y','Y %','number')+fld('start','Start s','number')+fld('dur','Length s','number')+fld('inA','Entrance','sel',INS)+fld('idle','Idle motion','sel',IDLE)+fld('x2','Move to X % (opt)','number')+fld('y2','Move to Y % (opt)','number')+fld('sfx','Sound effect','sel',SFX)+'</div>'+kfUI(l)+'<div class="flex gap-1.5 mt-2"><button class="b2" onclick="dup()">Duplicate</button><button class="b2" onclick="del()">Delete</button></div>';
+ p.querySelectorAll('[data-k]').forEach(i=>{i.oninput=i.onchange=()=>{const k=i.dataset.k,n=['size','rot','x','y','start','dur','x2','y2'].includes(k);l[k]=n?(i.value===''?null:+i.value):i.value;draw();if(['start','dur'].includes(k))tl();autosave()}})}
+function del(){P.layers=P.layers.filter(l=>l.id!==S.sel);S.sel=null;rebuild()}
+function dup(){const l=sel();if(!l)return;const c=Object.assign({},l,{id:uid++,x:l.x+4,y:l.y+4,kf:(l.kf||[]).map(k=>({...k}))});if(imgs[l.id])imgs[c.id]=imgs[l.id];P.layers.push(c);S.sel=c.id;rebuild()}
 
-        function openAiModal() { document.getElementById('ai-modal').classList.remove('hidden'); }
-        function closeAiModal() { document.getElementById('ai-modal').classList.add('hidden'); }
+/* keyframes */
+function kfUI(l){const k=(l.kf||[]).slice().sort((a,b)=>a.t-b.t);return '<div class="mt-2 border-t border-slate-800 pt-2"><div class="flex items-center gap-1.5 mb-1"><b class="text-[11px]">Keyframes</b><select id="kfe" class="inp !w-auto">'+Object.keys(EASEK).map(e=>'<option>'+e+'</option>').join('')+'</select><button class="b2" onclick="addKf()">＋ At playhead</button></div><div class="grid grid-cols-3 gap-1 mb-1"><div><label>Scale %</label><input id="kfs" class="inp" type="number" value="100"></div><div><label>Rotate °</label><input id="kfr" class="inp" type="number" value="0"></div><div><label>Opacity %</label><input id="kfo" class="inp" type="number" value="100"></div></div>'+k.map((q,i)=>'<div class="flex justify-between text-[10px] bg-slate-950 rounded px-1.5 py-1 mb-1"><span>'+q.t.toFixed(1)+'s · '+Math.round(q.x)+','+Math.round(q.y)+' · '+Math.round(q.s)+'% · '+Math.round(q.r)+'° · '+Math.round(q.o)+'% · '+q.e+'</span><button onclick="delKf('+i+')">✕</button></div>').join('')+'<p class="text-[10px] text-slate-500">Set X/Y above, move the playhead, then add a key. Motion eases into each key.</p></div>'}
+function addKf(){const l=sel();if(!l)return;const t=Math.round(cl(S.t-l.start,0,l.dur)*10)/10;l.kf=(l.kf||[]).filter(q=>Math.abs(q.t-t)>.04);l.kf.push({t,x:l.x,y:l.y,s:+$('kfs').value,r:+$('kfr').value,o:+$('kfo').value,e:$('kfe').value});rebuild()}
+function delKf(i){const l=sel();if(!l)return;const k=l.kf.slice().sort((a,b)=>a.t-b.t);k.splice(i,1);l.kf=k;rebuild()}
 
-        function sendAiChat() {
-            const input = document.getElementById('ai-chat-input');
-            const body = document.getElementById('ai-chat-body');
-            if(!input.value.trim()) return;
+/* timeline (virtualized) */
+function ruler(){const r=$('ruler'),d=P.dur,step=d>600?60:d>240?30:d>90?15:d>40?10:d>15?5:1;let h='';for(let i=0;i<=d;i+=step)h+='<span style="position:absolute;left:'+(i/d*100)+'%;font-size:9px;color:#64748b;transform:translateX(-50%)">'+fmt(i)+'</span>';r.innerHTML=h}
+function tl(){const sc=$('tlscroll'),T=$('tl'),n=P.layers.length,d=P.dur;
+ T.style.height=(n*ROW)+'px';$('lcount').textContent=n+' layers';
+ const first=Math.max(0,Math.floor(sc.scrollTop/ROW)-3),last=Math.min(n,first+Math.ceil(sc.clientHeight/ROW)+6);
+ let h='';
+ for(let i=first;i<last;i++){const l=P.layers[i],s=l.id===S.sel;
+  h+='<div class="tl-row" style="top:'+(i*ROW)+'px"><div class="'+(s?'text-purple-300':'')+'" style="position:absolute;left:0;width:'+LABEL+'px;top:0;bottom:0;overflow:hidden;white-space:nowrap;font-size:11px;padding-right:4px;line-height:26px">'+esc(l.type==='image'?'🖼 '+l.text:(l.text||l.type))+'</div>'+
+  '<div style="position:absolute;left:'+LABEL+'px;right:0;top:0;bottom:0"><div class="bar'+(s?' sel':'')+'" data-id="'+l.id+'" style="left:'+(l.start/d*100)+'%;width:'+Math.max(.3,l.dur/d*100)+'%">'+esc(l.inA)+'<div class="rh"></div></div></div></div>'}
+ T.innerHTML=h;draw()}
+const tlEl=$('tl');
+tlEl.onpointerdown=e=>{const b=e.target.closest('.bar');if(!b)return;const l=findL(+b.dataset.id);if(!l)return;
+ const tr=b.parentElement.getBoundingClientRect();S.sel=l.id;
+ tdrag={l,el:b,tr,mode:e.target.classList.contains('rh')?'r':'m',ox:e.clientX,s:l.start,d:l.dur};
+ b.setPointerCapture(e.pointerId);
+ document.querySelectorAll('#tl .bar').forEach(x=>x.classList.toggle('sel',x===b));props();draw();e.preventDefault()};
+tlEl.onpointermove=e=>{if(!tdrag)return;const dt=(e.clientX-tdrag.ox)/tdrag.tr.width*P.dur;
+ if(tdrag.mode==='m')tdrag.l.start=Math.round(cl(tdrag.s+dt,0,P.dur-.2)*10)/10;else tdrag.l.dur=Math.round(Math.max(.3,tdrag.d+dt)*10)/10;
+ tdrag.el.style.left=tdrag.l.start/P.dur*100+'%';tdrag.el.style.width=tdrag.l.dur/P.dur*100+'%';draw()};
+tlEl.onpointerup=()=>{if(tdrag){tdrag=null;autosave();tl();props()}};
+$('tlscroll').onscroll=()=>tl();
+$('ruler').onclick=e=>{const r=e.currentTarget.getBoundingClientRect();S.t=cl((e.clientX-r.left)/r.width,0,1)*P.dur;restartAudio();draw()};
+$('dur').onchange=e=>{P.dur=cl(+e.target.value||20,3,MAX_DUR);$('dur').value=P.dur;rebuild()};
+$('ratio').onchange=e=>{P.ratio=e.target.value;size();draw();autosave()};
+$('bg').onchange=e=>{P.bg=+e.target.value;draw();autosave()};
+function rebuild(){ruler();tl();props();draw();autosave()}
 
-            body.innerHTML += `<div class="flex justify-end"><div class="bg-cyan-500 text-slate-950 p-3 rounded-xl font-medium max-w-[80%]">${input.value}</div></div>`;
-            const val = input.value;
-            input.value = '';
+/* ---------- playback & audio ---------- */
+function aud(){if(!ac){ac=new (window.AudioContext||window.webkitAudioContext)();adest=ac.createMediaStreamDestination()}if(ac.state==='suspended')ac.resume();return ac}
+function stopAudio(){activeSrc.forEach(s=>{try{s.stop()}catch(e){}});activeSrc=[]}
+function scheduleAudio(from){stopAudio();const c=aud();
+ P.narr.forEach(n=>{if(!n.buf)return;const end=n.t+n.buf.duration;if(end<=from)return;
+  const s=c.createBufferSource();s.buffer=n.buf;s.connect(c.destination);s.connect(adest);
+  s.start(c.currentTime+Math.max(0,n.t-from),Math.max(0,from-n.t));activeSrc.push(s)})}
+function restartAudio(){spoken.clear();if(S.play)scheduleAudio(S.t);else stopAudio();try{speechSynthesis.cancel()}catch(e){}}
+function say(tx){try{const u=new SpeechSynthesisUtterance(tx);u.lang=LG()==='English'?'en-IN':'hi-IN';u.rate=1.05;speechSynthesis.speak(u)}catch(e){}}
+function fireSfx(a,b){P.layers.forEach(l=>{if(l.sfx&&l.sfx!=='none'&&l.start>a&&l.start<=b)sfx(l.sfx)})}
+function sfx(n){try{const c=aud(),now=c.currentTime;
+ const tone=(f1,f2,d,ty,v)=>{const o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.setValueAtTime(f1,now);o.frequency.exponentialRampToValueAtTime(f2,now+d);g.gain.setValueAtTime(v,now);g.gain.exponentialRampToValueAtTime(.001,now+d);o.connect(g);g.connect(c.destination);g.connect(adest);o.start(now);o.stop(now+d)};
+ const noise=(d,f,v)=>{const b=c.createBuffer(1,c.sampleRate*d,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;const s=c.createBufferSource(),fl=c.createBiquadFilter(),g=c.createGain();s.buffer=b;fl.type='bandpass';fl.frequency.setValueAtTime(f,now);fl.frequency.exponentialRampToValueAtTime(f*6,now+d);g.gain.setValueAtTime(v,now);g.gain.exponentialRampToValueAtTime(.001,now+d);s.connect(fl);fl.connect(g);g.connect(c.destination);g.connect(adest);s.start(now)};
+ if(n==='pop')tone(300,900,.12,'sine',.5);else if(n==='ding'){tone(1318,1318,.5,'sine',.4);tone(1760,1760,.4,'sine',.2)}
+ else if(n==='click')tone(1200,600,.04,'square',.2);else if(n==='boom'){tone(120,30,.6,'sine',.9);noise(.4,200,.4)}else if(n==='whoosh')noise(.45,400,.5)}catch(e){}}
+let last_=0;
+function tick(n){if(S.play){const p0=S.t;S.t+=(n-last)/1000;fireSfx(p0,S.t);
+  if($('vo').checked&&!S.rec){for(let i=0;i<P.narr.length;i++){const x=P.narr[i];if(!x.buf&&S.t>=x.t&&S.t<x.t+1&&!spoken.has(i)){spoken.add(i);say(x.text)}}}
+  if(S.t>=P.dur){S.t=P.dur;pause()}
+  draw()}
+ last=n;requestAnimationFrame(tick)}
+function play(){aud();if(S.t>=P.dur-.05)S.t=0;spoken.clear();last=performance.now();S.play=true;$('pp').textContent='❚❚';scheduleAudio(S.t)}
+function pause(){S.play=false;stopAudio();try{speechSynthesis.cancel()}catch(e){};$('pp').textContent='▶';stopRec()}
+function tog(){S.play?pause():play()}
+$('seek').oninput=e=>{S.t=e.target.value/1000*P.dur;restartAudio();draw()};
+$('vo').onchange=()=>{};
 
-            setTimeout(() => {
-                body.innerHTML += `<div class="flex justify-start"><div class="bg-slate-800 text-slate-200 p-3 rounded-xl border border-slate-700 max-w-[80%]">✅ Analyzed error in "${val}". Automatically fixed timeline synchronization.</div></div>`;
-                body.scrollTop = body.scrollHeight;
-            }, 600);
-        }
-    </script>
+/* ---------- render (records in real time) ---------- */
+async function openWriter(){
+ if(!window.showSaveFilePicker)return null;
+ try{const h=await showSaveFilePicker({suggestedName:'motion-video.webm',types:[{description:'WebM video',accept:{'video/webm':['.webm']}}]});return await h.createWritable()}
+ catch(e){return e.name==='AbortError'?'cancel':null}}
+async function renderV(){
+ if(S.rec){stopRec();return}
+ if(!window.MediaRecorder){alert('Recording is not supported in this browser.');return}
+ const writer=await openWriter();
+ if(writer==='cancel')return;
+ try{aud();fileW=writer;
+  const st=cv.captureStream(30);adest.stream.getAudioTracks().forEach(t=>st.addTrack(t));
+  rec=new MediaRecorder(st,{mimeType:MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm',videoBitsPerSecond:2.5e6});
+  ch=[];wq=Promise.resolve();
+  rec.ondataavailable=e=>{if(!e.data.size)return;if(fileW)wq=wq.then(()=>fileW.write(e.data));else ch.push(e.data)};
+  rec.onstop=async()=>{$('rbtn').disabled=false;$('rbtn').textContent='⏺ Render video';
+   if(fileW){await wq;await fileW.close();fileW=null;setAs('✅ Video saved to the file you chose.');return}
+   await deliver(new Blob(ch,{type:'video/webm'}));ch=[]};
+  S.rec=true;S.t=0;$('rbtn').disabled=false;$('rbtn').textContent='■ Stop recording';rec.start(3000);play()}
+ catch(e){S.rec=false;alert('Render failed: '+e.message)}}
+function stopRec(){if(!S.rec)return;S.rec=false;try{rec.stop()}catch(e){}}
+async function deliver(b){try{const d=await claude.use('downloads');if(d){await d.save({filename:'motion-video.webm',data:b});return}}catch(e){}
+ const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='motion-video.webm';document.body.appendChild(a);a.click();a.remove()}
+
+/* ---------- AI helpers ---------- */
+async function getS(){try{const s=await claude.use('sample');if(s)return s}catch(e){}return null}
+async function callAI(s,prompt,json){
+ for(let a=0;;a++){
+  try{return json?await s.json(prompt,{modelTier:'default',cache:false}):await s(prompt,{cache:false})}
+  catch(e){if(e.code==='rate_limited'&&a<3){setAs('Rate limited, waiting '+(20*(a+1))+'s…');await sleep(20000*(a+1));continue}throw e}}}
+function cleanSvg(v){v=v.replace(/<script[\s\S]*?<\/script>/gi,'').replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi,'').replace(/\son\w+="[^"]*"/gi,'').replace(/(?:xlink:)?href="(?!#)[^"]*"/gi,'');
+ return v.replace(/<svg([^>]*)>/i,(m0,a)=>'<svg'+a.replace(/\s(width|height)="[^"]*"/gi,'')+' width="400" height="400">')}
+async function genArt(s,q){const r=await callAI(s,'Draw a flat, colorful 2D vector sticker illustration (cartoon style, bold outlines, transparent background) of: "'+q+'". Return ONLY one complete <svg> element with viewBox="0 0 400 400" and xmlns="http://www.w3.org/2000/svg". No scripts, no external links, no text.',false);
+ const m=/<svg[\s\S]*<\/svg>/i.exec((r&&r.text)||'');return m?'data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(cleanSvg(m[0])))):null}
+function makeImage(layer,url,q,size,d){Object.assign(layer,{type:'image',text:q,size,inA:'bounce',idle:'float',src:url,
+ kf:[{t:0,x:layer.x,y:layer.y,s:85,r:-5,o:100,e:'out'},{t:.6,x:layer.x,y:layer.y,s:100,r:0,o:100,e:'out'},{t:d,x:layer.x,y:layer.y,s:108,r:3,o:100,e:'io'}]});loadImg(layer)}
+async function manualArt(){const q=$('art').value.trim();if(!q)return;const s=await getS();if(!s){setAs('AI art only works when this page is opened inside claude.ai.');return}
+ setAs('Drawing '+q+'…');try{const url=await genArt(s,q);if(!url)throw new Error('No SVG returned');const l=mk({type:'image',text:q,size:100,start:S.t,dur:5,inA:'bounce',idle:'float',src:url});P.layers.push(l);loadImg(l);S.sel=l.id;rebuild();setAs('Art layer added.')}catch(e){setAs('⚠ '+(e.message||'Failed'))}}
+
+/* ---------- AUTO-STUDIO (batched) ---------- */
+const setAs=(m,pct)=>{$('auto-st').textContent=m;if(pct!=null)$('prog').style.width=cl(pct,0,100)+'%'};
+function addScenes(scenes,t0,k0){
+ const port=P.ratio==='p',HC=/^#[0-9a-f]{6}$/i,Vc=$('o-voice').checked,Sx=$('o-sfx').checked,Tr=$('o-tr').checked;
+ const ENT=['pop','zoom','type','bounce'],BC=['#dc2626','#2563eb','#16a34a','#9333ea','#ea580c'],CC=['#6d28d9','#0ea5e9','#db2777','#16a34a','#ea580c'],CE=['bounce','slideU','pop'];
+ let t=t0;const artQ=[];
+ scenes.forEach((sc,i)=>{
+  const k=k0+i,nar=String(sc.narration||sc.headline||''),art=!!sc._art;
+  const d=Math.max(3,Math.round(nar.split(/\s+/).filter(Boolean).length/2.6*10)/10);
+  const hl=String(sc.headline||'').slice(0,30),cards=(Array.isArray(sc.cards)?sc.cards:[]).filter(Boolean).slice(0,3).map(c=>String(c).slice(0,14));
+  const sx=Sx&&SFX.includes(sc.sfx)?sc.sfx:'none',emo=sc.sticker&&String(sc.sticker).length<=8?String(sc.sticker):'✨';
+  if(Tr&&k>0)P.layers.push(mk({type:'flash',color:'#ffffff',size:100,start:Math.max(0,t-.05),dur:.35,inA:'none',sfx:Sx?'whoosh':'none'}));
+  if(sc.badge&&String(sc.badge).trim())P.layers.push(mk({type:'badge',text:String(sc.badge).toUpperCase().slice(0,16),color:BC[k%5],x:50,y:port?8:10,size:port?34:42,start:t,dur:d,inA:'slideU'}));
+  const side=art&&!port,hx=side?30:50,hy=port?(art?58:40):(cards.length?34:46);
+  if(hl)P.layers.push(mk({type:'text',text:hl,color:HC.test(sc.accent)?sc.accent:'#fde047',x:hx,y:hy,size:cl(Math.floor((side?.5:.88)*W/(Math.max(hl.length,4)*.62*u)),34,100),start:t+.1,dur:d-.1,inA:ENT[k%4],idle:k===0?'pulse':'none',sfx:sx}));
+  cards.forEach((c,j)=>{const n=cards.length,xs=n===1?[50]:n===2?[35,65]:[20,50,80];P.layers.push(mk({type:'card',text:c,color:CC[(k+j)%5],x:xs[j],y:port?80:side?78:76,size:port?46:54,start:t+.5+j*.35,dur:Math.max(1.5,d-.5-j*.35),inA:CE[j%3]}))});
+  if(art){const ex={x:port?50:75,y:port?24:50,size:port?100:110};const L=mk({type:'emoji',text:emo,x:ex.x,y:ex.y,size:ex.size,start:t+.2,dur:d-.2,inA:'spin',idle:'float'});P.layers.push(L);artQ.push({q:String(sc.art).slice(0,90),layer:L,size:ex.size,d})}
+  else P.layers.push(mk({type:'emoji',text:emo,x:port?80:86,y:port?24:20,size:port?110:130,start:t+.2,dur:d-.2,inA:'spin',idle:'float'}));
+  if(Vc&&nar)P.narr.push({t:Math.round((t+.15)*10)/10,text:nar});
+  t+=d});
+ return{t,artQ}}
+function scenePrompt(src,b,cnt,total,prev,budget,port){
+ return 'You are a top 2D motion-graphics director making a '+(port?'9:16 YouTube Short':'16:9 YouTube explainer')+' in the style of popular creator videos (big hook text, pop-in cards, badges, emoji stickers, cartoon art). Language for all on-screen text and narration: '+LG()+'. '+
+ src+(prev.length?' Headlines already used earlier (do not repeat): '+prev.slice(-8).join(' | ')+'.':'')+
+ ' Make exactly '+cnt+' scenes, numbered '+(b+1)+' to '+(b+cnt)+' of '+total+' total. Keep energy and variety across scenes. Return ONLY JSON: {"bg":0-4 (0 navy,1 green,2 pink,3 midnight,4 purple),"scenes":[{"narration":"1-2 spoken sentences","headline":"max 4 words, max 26 chars","badge":"optional one-word label like PROBLEM, TIP, FACT, WARNING, or empty string","cards":["up to 3 short labels, max 12 chars, or empty array"],"sticker":"one fitting emoji","art":"short English prompt for one cartoon illustration, or empty string","sfx":"pop|whoosh|ding|boom|click","accent":"#hex bright color for the headline"}]}. Use a non-empty art prompt for at most '+budget+' scenes. Vary badges and cards.'}
+async function autoStudio(){
+ if(S.busy){S.stop=true;setAs('Stopping after the current batch…');return}
+ const txt=$('auto-in').value.trim();
+ if(!txt){setAs('Paste a script or type a topic first.');return}
+ const s=await getS();if(!s){setAs('AI is only available when this page is opened inside claude.ai.');return}
+ S.busy=true;S.stop=false;$('auto-btn').textContent='■ Stop';pause();
+ const port=P.ratio==='p',total=cl(parseInt($('alen').value)||8,1,600),bsz=cl(parseInt($('batch').value)||20,3,30);
+ const artTotal=$('o-art').checked?cl(parseInt($('artmax').value)||0,0,400):0;
+ const words=txt.split(/\s+/).filter(Boolean),isScript=words.length>=60,wps=isScript?Math.max(1,Math.ceil(words.length/total)):0;
+ P.layers=[];P.narr=[];S.sel=null;S.t=0;
+ let t=.2,k=0,artsDone=0,artOff=false,prev=[];
+ try{
+  for(let b=0;b<total&&!S.stop;b+=bsz){
+   const cnt=Math.min(bsz,total-b),part=isScript?words.slice(b*wps,(b+cnt)*wps).join(' '):'';
+   const budget=artOff?0:Math.max(0,Math.min(cnt,Math.round(artTotal*(b+cnt)/total)-artsDone));
+   const src=isScript?'SCRIPT PART for these scenes (follow it closely, trim filler): """'+part+'"""':'TOPIC: "'+txt.slice(0,600)+'". Write an original, engaging script that flows naturally across the whole video.';
+   setAs('Writing scenes '+(b+1)+'–'+(b+cnt)+' of '+total+'…',b/total*60);
+   const r=await callAI(s,scenePrompt(src,b,cnt,total,prev,budget,port),true);
+   const scenes=(r&&Array.isArray(r.scenes)?r.scenes:[]).slice(0,cnt);
+   if(!scenes.length)throw new Error('AI returned no scenes for batch starting at '+(b+1));
+   if(b===0){P.bg=cl(+r.bg||0,0,4);$('bg').value=P.bg}
+   let bud=budget;scenes.forEach(sc=>{if(sc.art&&bud>0){sc._art=true;bud--}});
+   const res=addScenes(scenes,t,k);t=res.t;k+=scenes.length;prev.push(...scenes.map(x=>String(x.headline||'')));
+   for(let i=0;i<res.artQ.length&&!S.stop&&!artOff;i++){const a=res.artQ[i];
+    setAs('Drawing AI art '+(artsDone+1)+' of '+artTotal+'…',b/total*60+(i/Math.max(1,res.artQ.length))*20);
+    try{const url=await genArt(s,a.q);if(url){makeImage(a.layer,url,a.q,a.size,a.d);artsDone++}}
+    catch(e){if(e.code==='rate_limited'){artOff=true;setAs('Art rate limit reached. Remaining scenes use emoji stickers.')}}
+    await sleep(600)}
+   rebuild();
+   setAs(k+' of '+total+' scenes done…',(k/total)*90);
+   await saveP()}
+  P.dur=cl(Math.ceil(t+.5),5,MAX_DUR);$('dur').value=P.dur;S.sel=null;S.t=0;rebuild();
+  if(!S.stop&&$('o-tts').checked&&$('tts-prov').value!=='browser')await genVoice();
+  await saveP();
+  setAs('✅ '+k+' scenes · '+P.layers.length+' layers · '+fmt(P.dur)+' long · '+artsDone+' AI art'+(S.stop?' (stopped early, partial video kept)':'')+'. Preview with ▶, then Render.',100);
+ }catch(e){await saveP();setAs('⚠ '+(e.message||e.code||'Something went wrong')+'. '+k+' scenes were kept.')}
+ finally{S.busy=false;S.stop=false;$('auto-btn').textContent='🚀 Generate everything'}}
+
+/* ---------- AI voice ---------- */
+const setVs=m=>{$('voice-st').textContent=m};
+function ttsCfg(){return{provider:$('tts-prov').value,key:$('tts-key').value.trim(),voice:$('tts-voice').value.trim()}}
+async function keyFor(cfg,text){const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(cfg.provider+'|'+cfg.voice+'|'+text));return 'a:'+[...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function ttsRequest(text,cfg){
+ if(cfg.provider==='elevenlabs'){const r=await fetch('https://api.elevenlabs.io/v1/text-to-speech/'+encodeURIComponent(cfg.voice||'21m00Tcm4TlvDq8ikWAM')+'?output_format=mp3_44100_128',{method:'POST',headers:{'xi-api-key':cfg.key,'Content-Type':'application/json',Accept:'audio/mpeg'},body:JSON.stringify({text,model_id:'eleven_multilingual_v2'})});
+  if(!r.ok){const e=new Error('ElevenLabs error '+r.status);e.status=r.status;throw e}return r.arrayBuffer()}
+ if(cfg.provider==='openai'){const r=await fetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{Authorization:'Bearer '+cfg.key,'Content-Type':'application/json'},body:JSON.stringify({model:'gpt-4o-mini-tts',voice:cfg.voice||'alloy',input:text,response_format:'mp3'})});
+  if(!r.ok){const e=new Error('OpenAI error '+r.status);e.status=r.status;throw e}return r.arrayBuffer()}
+ throw new Error('Choose ElevenLabs or OpenAI for AI voice')}
+async function retry(fn,tries=4){for(let a=0;;a++){try{return await fn()}catch(e){if(a>=tries-1)throw e;await sleep(1500*2**a)}}}
+async function pool(items,n,fn){let i=0;await Promise.all(Array.from({length:n},async()=>{while(i<items.length){const it=items[i++];await fn(it)}}))}
+async function genVoice(){
+ if(S.voiceBusy){S.voiceStop=true;setVs('Stopping after current lines…');return}
+ if(S.busy){setVs('Wait for scene generation to finish first.');return}
+ const cfg=ttsCfg();
+ if(cfg.provider==='browser'){setVs('Pick ElevenLabs or OpenAI for AI voice. The browser voice only plays in preview.');return}
+ if(!cfg.key){setVs('Paste your API key first.');return}
+ const todo=P.narr.filter(n=>n.text&&!n.buf);
+ const chars=P.narr.reduce((a,n)=>a+n.text.length,0);
+ if(!todo.length){setVs('All '+P.narr.length+' lines already have voice.');return}
+ try{await DB.set('tts',cfg)}catch(e){}
+ S.voiceBusy=true;S.voiceStop=false;$('voice-btn').textContent='■ Stop voice generation';
+ let done=0,fail=0,lastErr='';const c=aud();
+ const upd=()=>setVs('Voice '+done+'/'+todo.length+' lines · '+chars.toLocaleString()+' characters in script'+(fail?' · '+fail+' failed ('+lastErr+')':''));
+ await pool(todo,3,async n=>{if(S.voiceStop)return;
+  try{const k=await keyFor(cfg,n.text);let ab=await DB.get(k,'audio');
+   if(!ab){ab=await retry(()=>ttsRequest(n.text,cfg));await DB.set(k,ab,'audio')}
+   n.key=k;n.buf=await c.decodeAudioData(ab.slice(0));done++}
+  catch(e){fail++;lastErr=e.message}
+  upd()});
+ S.voiceBusy=false;$('voice-btn').textContent='🎙 Generate AI voice for all lines';
+ await saveP();
+ setVs((S.voiceStop?'Stopped. ':'Done. ')+done+' lines ready'+(fail?', '+fail+' failed':'')+'. Pause and press ▶ to hear them in preview.')}
+async function hydrateAudio(){const c=aud();for(const n of P.narr){if(!n.key)continue;try{const ab=await DB.get(n.key,'audio');if(ab)n.buf=await c.decodeAudioData(ab.slice(0))}catch(e){}}}
+async function loadTts(){try{const t=await DB.get('tts');if(t){$('tts-prov').value=t.provider||'browser';$('tts-key').value=t.key||'';$('tts-voice').value=t.voice||''}}catch(e){}}
+
+/* ---------- Claude assistant ---------- */
+function addMsg(role,text){const d=document.createElement('div');d.className='msg '+role;d.textContent=text;$('chat-log').appendChild(d);$('chat-log').scrollTop=1e9;return d}
+function projectSummary(){return P.layers.length+' layers, '+fmt(P.dur)+' long, '+(P.ratio==='l'?'16:9':'9:16')+', '+P.narr.length+' narration lines'}
+async function chatSend(text){
+ text=(text??$('chat-in').value).trim();if(!text||S.chatBusy)return;
+ $('chat-in').value='';addMsg('user',text);chat.push({role:'user',content:text});
+ const s=await getS();if(!s){const d=addMsg('error','AI is only available when this page is opened inside claude.ai.');chat.pop();return}
+ S.chatBusy=true;const pending=addMsg('sys','Claude is thinking…');
+ const hist=chat.slice(-14).map(m=>(m.role==='user'?'User: ':'Assistant: ')+m.content).join('\n\n');
+ const sys='You are Motion Studio Assistant, an expert in YouTube scripting, long-form narration, motion graphics and video production. You know everything Claude knows and can help with any topic. Reply in '+LG()+' unless the user asks otherwise. Current project: '+projectSummary()+'.';
+ try{const r=await callAI(s,sys+'\n\nConversation so far:\n'+hist+"\n\nReply to the user's last message.",false);
+  const reply=(r&&r.text)||'(no reply)';chat.push({role:'assistant',content:reply});pending.className='msg assistant';pending.textContent=reply;saveChat()}
+ catch(e){pending.className='msg error';pending.textContent=e.message||'Request failed'}
+ finally{S.chatBusy=false}}
+function quick(kind){
+ if(kind==='ideas'){const hint=$('auto-in').value.trim().slice(0,200)||'any popular topic';
+  chatSend('Suggest 5 distinct long-form YouTube video ideas (each 30–60 minutes) about: '+hint+'. For each give a title, a hook line, and why it works.')}
+ else{const sample=P.layers.slice(0,40).map(l=>({type:l.type,text:l.text,start:+l.start.toFixed(1),dur:+l.dur.toFixed(1),inA:l.inA}));
+  chatSend('Review my video timeline and give 5 concrete fixes for pacing, hierarchy, overlaps and effects. Project: '+projectSummary()+'. First layers: '+JSON.stringify(sample))}}
+function useLast(){const m=[...chat].reverse().find(x=>x.role==='assistant');if(!m){setAs('No assistant reply yet.');return}$('auto-in').value=m.content;setAs('Reply copied into the script box. Set scene count, then press Generate.')}
+function clearChat(){chat=[];$('chat-log').innerHTML='';saveChat()}
+$('chat-in').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();chatSend()}};
+
+/* ---------- misc ---------- */
+function newP(){if(S.busy)return;pause();P.layers=[];P.narr=[];S.sel=null;S.t=0;imgs={};rebuild();setAs('Blank project ready.')}
+function demo(){P.layers=[mk({type:'badge',text:'1 MONTH',color:'#2563eb',x:50,y:14,size:44,start:0,dur:5,inA:'slideU'}),mk({type:'text',text:'WHO IS WINNER?',color:'#fde047',x:50,y:45,size:90,start:.5,dur:5,inA:'pop',idle:'pulse'}),mk({type:'card',text:'Editor 1',color:'#6d28d9',x:25,y:75,size:60,start:2,dur:4,inA:'bounce'}),mk({type:'card',text:'Editor 2',color:'#0ea5e9',x:50,y:75,size:60,start:2.4,dur:4,inA:'bounce'}),mk({type:'card',text:'Editor 3',color:'#db2777',x:75,y:75,size:60,start:2.8,dur:4,inA:'bounce'}),mk({type:'emoji',text:'🔍',x:75,y:45,size:150,start:3.5,dur:4,inA:'zoom',idle:'float',x2:35,y2:70}),mk({type:'text',text:'Describe your video and tap 🚀 Generate →',color:'#ffffff',x:50,y:92,size:34,start:6,dur:6,inA:'type'})];P.dur=14}
+
+/* ---------- init ---------- */
+$('ratio').value=P.ratio;
+(async function init(){
+ try{const cs=await DB.get('chat');chat=Array.isArray(cs)?cs:[];chat.forEach(m=>addMsg(m.role,m.content))}catch(e){}
+ await loadTts();
+ await loadP();
+ $('ratio').value=P.ratio;$('bg').value=P.bg;$('dur').value=P.dur;
+ size();rebuild();requestAnimationFrame(tick);
+ if(!chat.length)addMsg('sys','Hi! I can write scripts, plan video topics, review your timeline, or answer any question. Use “Use last reply as script” to send a script to Auto-Studio.');
+})();
+['tts-prov','tts-voice','tts-key'].forEach(id=>$(id).addEventListener('change',()=>DB.set('tts',ttsCfg()).catch(()=>{})));
+</script>
 </body>
 </html>
